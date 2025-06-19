@@ -40,7 +40,7 @@ public class BookingService {
 		booking.setCustomer(customer);
 		booking.setService(service);
 		booking.setWork(work);
-		booking.setBooking_date(appointmentTime);
+		booking.setBookingDate(appointmentTime);
 		booking.setStatus("Pending"); // hoặc trạng thái khác nếu muốn
 
 		// Lưu booking
@@ -53,11 +53,11 @@ public class BookingService {
 	}
 
 	public List<Booking> getBookingsByCustomer(User customer) {
-		return bookingRepository.findByCustomerOrderByTimeDesc(customer);
+		return bookingRepository.findByCustomerOrderByBookingDateDesc(customer);
 	}
 
 	public List<Booking> getBookingsByDoctor(User doctor) {
-		return bookingRepository.findByDoctor(doctor);
+		return bookingRepository.findByWork_Doctor(doctor);
 	}
 
 	public Optional<Booking> getBookingById(Long id) {
@@ -78,7 +78,7 @@ public class BookingService {
 	}
 
 	public List<Booking> getDoctorBookingsForTimeRange(User doctor, LocalDateTime startTime, LocalDateTime endTime) {
-		return bookingRepository.findByDoctorAndTimeRange(doctor, startTime, endTime);
+		return bookingRepository.findByWork_DoctorAndBookingDateBetween(doctor, startTime, endTime);
 	}
 
 	public List<Booking> findAll() {

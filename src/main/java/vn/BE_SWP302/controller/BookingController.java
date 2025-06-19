@@ -39,7 +39,7 @@ public class BookingController {
 
 	@PutMapping("/{id}")
 	public Booking update(@PathVariable Long id, @RequestBody Booking booking) {
-		booking.setBooking_id(id);
+		booking.setBookingId(id);
 		return bookingService.save(booking);
 	}
 

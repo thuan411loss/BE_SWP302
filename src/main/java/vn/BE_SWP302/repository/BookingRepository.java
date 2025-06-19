@@ -13,10 +13,9 @@ import vn.BE_SWP302.domain.User;
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long>, JpaSpecificationExecutor<Booking> {
 
-	List<Booking> findByCustomerOrderByTimeDesc(User customer);
+	List<Booking> findByCustomerOrderByBookingDateDesc(User customer);
 
-	List<Booking> findByDoctor(User doctor);
+	List<Booking> findByWork_Doctor(User doctor);
 
-	List<Booking> findByDoctorAndTimeRange(User doctor, LocalDateTime start,
-			LocalDateTime end);
+	List<Booking> findByWork_DoctorAndBookingDateBetween(User doctor, LocalDateTime start, LocalDateTime end);
 }

@@ -25,7 +25,7 @@ public class Booking {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long booking_id;
+	private Long bookingId;
 
 	@ManyToOne
 	@JoinColumn(name = "customer_id", nullable = false)
@@ -39,7 +39,7 @@ public class Booking {
 	@JoinColumn(name = "work_id", nullable = false)
 	private WorkSchedule work;
 
-	private LocalDateTime booking_date = LocalDateTime.now();
+	private LocalDateTime bookingDate = LocalDateTime.now();
 
 	private String status = "Pending";
 
