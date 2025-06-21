@@ -13,8 +13,21 @@ import vn.BE_SWP302.repository.TreatmentSchedulesRepository;
 public class TreatmentSchedulesService {
 
 	private final TreatmentSchedulesRepository treatmentSchedulesRepository = null;
+	private final MedicalResultsRepository medicalResultsRepository = null;
 
-	public TreatmentSchedules createSchedule(TreatmentSchedules schedule) {
+	public TreatmentSchedules createSchedule(TreatmentSchedulesRequest request) {
+		if (!medicalResultsRepository.existsById(request.getMedicalResultsId())) {
+			throw new IllegalArgumentException("Medical results not found");
+		TreatmentSchedules schedule = new TreatmentSchedules();
+		schedule.setMedicalResultsId(request.getMedicalResultsId());
+		schedule.setStartDate(request.getStartDate());
+		schedule.setEndDate(request.getEndDate());
+		schedule.setStatus("Scheduled");
+		schedule.setNotes(request.getNotes());
+		treatmentSchedulesRepository.save(schedule);
+		return new ApiResponse(true, "Schedule Created Successfully");
+		}
+
 		return treatmentSchedulesRepository.save(schedule);
 	}
 

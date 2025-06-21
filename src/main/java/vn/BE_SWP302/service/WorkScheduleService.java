@@ -12,9 +12,15 @@ import vn.BE_SWP302.repository.WorkScheduleRepository;
 
 @Service
 public class WorkScheduleService {
+	private final WorkScheduleRepository workScheduleRepository;
+
 
 	@Autowired
 	WorkScheduleRepository repository;
+
+	public ApiResponse createWorkSchedule(WorkScheduleRequest request) {
+		workScheduleRepository.save(request);
+		return new ApiResponse(true, "Work schedule created successfully");
 
 	public List<WorkSchedule> findAll() {
 		return repository.findAll();
