@@ -10,6 +10,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import jakarta.servlet.http.HttpServletResponse;
 import vn.BE_SWP302.domain.RestResponse;
+import vn.BE_SWP302.util.annotation.ApiMessage;
 
 @ControllerAdvice
 public class FormatRestResponse implements ResponseBodyAdvice<Object> {
@@ -43,7 +44,9 @@ public class FormatRestResponse implements ResponseBodyAdvice<Object> {
         } else {
 
             res.setData(body);
-            res.setMessage(" call api Success");
+            ApiMessage message = returnType.getMethodAnnotation(ApiMessage.class);
+            res.setMessage(message != null ? message.value() : "CALL API SUCCESSFULLY");
+
         }
         return res;
     }
