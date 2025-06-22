@@ -20,6 +20,7 @@ import vn.BE_SWP302.repository.UserRepository;
 @RequiredArgsConstructor
 
 public class MedicalResultsService {
+
 	private final MedicalResultsRepository medicalResultsRepository;
 	private final ExaminationRepository examinationRepository;
 	private final UserRepository userRepository;

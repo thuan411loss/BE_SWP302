@@ -1,18 +1,12 @@
 package vn.BE_SWP302.service;
 
-<<<<<<< HEAD
 import java.time.LocalDateTime;
-=======
-import java.util.Date;
->>>>>>> 52e7f7a56656db377c4bc8fb9da1e94e00aa7b80
 import java.util.List;
 import java.util.Optional;
 
-import org.hibernate.jpa.internal.ExceptionMapperLegacyJpaImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import io.micrometer.core.ipc.http.HttpSender.Request;
+import lombok.RequiredArgsConstructor;
 import vn.BE_SWP302.domain.Booking;
 import vn.BE_SWP302.domain.Examination;
 import vn.BE_SWP302.domain.dto.ApiResponse;
@@ -21,15 +15,11 @@ import vn.BE_SWP302.repository.ExaminationRepository;
 import vn.BE_SWP302.domain.dto.ExaminationRequest;
 
 @Service
+@RequiredArgsConstructor
+
 public class ExaminationService {
 	private final ExaminationRepository examinationRepository;
 	private final BookingRepository bookingRepository;
-
-	@Autowired
-	public ExaminationService(ExaminationRepository examinationRepository, BookingRepository bookingRepository) {
-		this.examinationRepository = examinationRepository;
-		this.bookingRepository = bookingRepository;
-	}
 
 	public ApiResponse createExamination(ExaminationRequest request) {
 		Optional<Booking> booking = bookingRepository.findById(request.getBookingId());
@@ -44,7 +34,6 @@ public class ExaminationService {
 		examinationRepository.save(exam);
 		return new ApiResponse(true, "Examination created successfully");
 	}
-	
 
 	public List<Examination> findAll() {
 		return examinationRepository.findAll();
