@@ -8,8 +8,7 @@ import org.springframework.stereotype.Repository;
 import vn.BE_SWP302.domain.Invoice;
 
 @Repository
-public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
-
+public interface invoiceRepository extends JpaRepository<Invoice, Long> {
     List<Invoice> findByBooking_Customer_Id(Long userId);
 
 }
