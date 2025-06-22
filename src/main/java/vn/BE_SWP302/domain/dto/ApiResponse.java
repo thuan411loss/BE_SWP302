@@ -9,8 +9,6 @@ import lombok.Setter;
 @Getter
 
 @AllArgsConstructor
-=======
-
 
 public class ApiResponse {
     private boolean success;
