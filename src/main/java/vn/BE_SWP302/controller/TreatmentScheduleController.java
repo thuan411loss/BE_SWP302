@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.RequiredArgsConstructor;
 import vn.BE_SWP302.domain.TreatmentSchedules;
 import vn.BE_SWP302.domain.dto.ApiResponse;
 import vn.BE_SWP302.domain.dto.TreatmentScheduleRequest;
