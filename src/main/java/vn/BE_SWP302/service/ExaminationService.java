@@ -1,23 +1,25 @@
 package vn.BE_SWP302.service;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
-import org.hibernate.jpa.internal.ExceptionMapperLegacyJpaImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import io.micrometer.core.ipc.http.HttpSender.Request;
+import lombok.RequiredArgsConstructor;
+import vn.BE_SWP302.domain.Booking;
 import vn.BE_SWP302.domain.Examination;
+import vn.BE_SWP302.domain.dto.ApiResponse;
+import vn.BE_SWP302.repository.BookingRepository;
 import vn.BE_SWP302.repository.ExaminationRepository;
+import vn.BE_SWP302.domain.dto.ExaminationRequest;
 
 @Service
+@RequiredArgsConstructor
+
 public class ExaminationService {
 	private final ExaminationRepository examinationRepository;
 	private final BookingRepository bookingRepository;
-
-	@Autowired
-	ExaminationRepository examinationRepository;
 
 	public ApiResponse createExamination(ExaminationRequest request) {
 		Optional<Booking> booking = bookingRepository.findById(request.getBookingId());
@@ -25,8 +27,8 @@ public class ExaminationService {
 			return new ApiResponse(false, "Booking not found");
 		}
 		Examination exam = new Examination();
-		exam.setBookingId(Request.getBookingId());
-		exam.setExam_date(new Date());
+		exam.setBooking(booking.get());
+		exam.setExam_date(LocalDateTime.now());
 		exam.setDiagnosis(request.getDiagnosis());
 		exam.setRecommendation(request.getRecommendation());
 		examinationRepository.save(exam);

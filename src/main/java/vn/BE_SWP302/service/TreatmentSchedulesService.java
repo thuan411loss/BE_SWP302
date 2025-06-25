@@ -1,34 +1,39 @@
 package vn.BE_SWP302.service;
 
 import java.util.List;
+import java.util.Optional;
+import java.time.LocalDate;
 
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import vn.BE_SWP302.domain.MedicalResults;
 import vn.BE_SWP302.domain.TreatmentSchedules;
+import vn.BE_SWP302.domain.dto.TreatmentScheduleRequest;
+import vn.BE_SWP302.domain.dto.ApiResponse;
+import vn.BE_SWP302.repository.MedicalResultsRepository;
 import vn.BE_SWP302.repository.TreatmentSchedulesRepository;
 
 @Service
 @RequiredArgsConstructor
 public class TreatmentSchedulesService {
 
-	private final TreatmentSchedulesRepository treatmentSchedulesRepository = null;
-	private final MedicalResultsRepository medicalResultsRepository = null;
+	private final TreatmentSchedulesRepository treatmentSchedulesRepository;
+	private final MedicalResultsRepository medicalResultsRepository;
 
-	public TreatmentSchedules createSchedule(TreatmentSchedulesRequest request) {
-		if (!medicalResultsRepository.existsById(request.getMedicalResultsId())) {
+	public ApiResponse createSchedule(TreatmentScheduleRequest request) {
+		Optional<MedicalResults> medicalResults = medicalResultsRepository.findById(request.getResultId());
+		if (medicalResults.isEmpty()) {
 			throw new IllegalArgumentException("Medical results not found");
+		}
 		TreatmentSchedules schedule = new TreatmentSchedules();
-		schedule.setMedicalResultsId(request.getMedicalResultsId());
-		schedule.setStartDate(request.getStartDate());
-		schedule.setEndDate(request.getEndDate());
+		schedule.setMedicalResult(medicalResults.get());
+		schedule.setStartDate(LocalDate.parse(request.getStartDate()));
+		schedule.setEndDate(LocalDate.parse(request.getEndDate()));
 		schedule.setStatus("Scheduled");
 		schedule.setNotes(request.getNotes());
 		treatmentSchedulesRepository.save(schedule);
 		return new ApiResponse(true, "Schedule Created Successfully");
-		}
-
-		return treatmentSchedulesRepository.save(schedule);
 	}
 
 	public List<TreatmentSchedules> viewAllSchedules() {
@@ -55,16 +60,6 @@ public class TreatmentSchedulesService {
 	// treatmentSchedulesRepository.deleteAllById(id);
 	// }
 
-	public List<TreatmentSchedules> findAll() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public TreatmentSchedules findById(Long id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	public TreatmentSchedules save(TreatmentSchedules schedule) {
 		// TODO Auto-generated method stub
 		return null;
@@ -73,5 +68,9 @@ public class TreatmentSchedulesService {
 	public void delete(int id) {
 		// TODO Auto-generated method stub
 
+	}
+
+	public List<TreatmentSchedules> getSchedulesByResult(Long resultId) {
+		return treatmentSchedulesRepository.findByMedicalResult_ResultId(resultId);
 	}
 }
