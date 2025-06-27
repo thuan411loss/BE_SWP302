@@ -7,5 +7,5 @@ import lombok.Setter;
 @Getter
 public class NotificationRequest {
     private Long userId;
-    private String content;
+    private String message;
 }

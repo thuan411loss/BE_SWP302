@@ -7,8 +7,8 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class InvoiceRequest {
-    private Long bookingId;
-    private BigDecimal totalAmount;
-    private String status;
+public class PaymentRequest {
+  private Long invoiceId;
+  private BigDecimal amount;
+  private String method;
 }

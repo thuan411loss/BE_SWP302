@@ -1,5 +1,7 @@
 package vn.BE_SWP302.domain.request;
 
+import java.time.LocalDate;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,7 +11,7 @@ public class MedicalResultsRequest {
     private Long examId;
     private String testName;
     private String resultValue;
-    private String resultDate;
+    private LocalDate resultDate;
     private Long staffId;
 
 }
