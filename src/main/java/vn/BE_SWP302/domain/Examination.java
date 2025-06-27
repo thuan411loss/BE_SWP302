@@ -23,7 +23,7 @@ public class Examination {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long exam_id;
+	private Long examId;
 
 	@ManyToOne
 	@JoinColumn(name = "booking_id", nullable = false)

@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import vn.BE_SWP302.domain.TreatmentSchedules;
 import vn.BE_SWP302.domain.request.TreatmentScheduleRequest;
 import vn.BE_SWP302.domain.response.ApiResponse;
+import vn.BE_SWP302.domain.response.TreatmentScheduleResponse;
 import vn.BE_SWP302.service.TreatmentSchedulesService;
 
 @RestController

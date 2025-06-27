@@ -4,9 +4,9 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
-import vn.BE_SWP302.domain.dto.TreatmentProgressRequest;
-import vn.BE_SWP302.domain.dto.TreatmentProgressResponse;
+import vn.BE_SWP302.domain.request.TreatmentProgressRequest;
 import vn.BE_SWP302.domain.response.ApiResponse;
+import vn.BE_SWP302.domain.response.TreatmentProgressResponse;
 import vn.BE_SWP302.service.TreatmentProgressService;
 
 @RestController

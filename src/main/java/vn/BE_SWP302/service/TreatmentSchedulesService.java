@@ -3,6 +3,7 @@ package vn.BE_SWP302.service;
 import java.util.List;
 import java.util.Optional;
 import java.time.LocalDate;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,7 @@ import vn.BE_SWP302.domain.MedicalResults;
 import vn.BE_SWP302.domain.TreatmentSchedules;
 import vn.BE_SWP302.domain.request.TreatmentScheduleRequest;
 import vn.BE_SWP302.domain.response.ApiResponse;
+import vn.BE_SWP302.domain.response.TreatmentScheduleResponse;
 import vn.BE_SWP302.repository.MedicalResultsRepository;
 import vn.BE_SWP302.repository.TreatmentSchedulesRepository;
 
@@ -18,7 +20,7 @@ import vn.BE_SWP302.repository.TreatmentSchedulesRepository;
 @RequiredArgsConstructor
 public class TreatmentSchedulesService {
 
-	private final TreatmentSchedulesRepository treatmentSchedulesRepository;
+	private final TreatmentSchedulesRepository treatmentScheduleRepository;
 	private final MedicalResultsRepository medicalResultsRepository;
 
 	public ApiResponse createSchedule(TreatmentScheduleRequest request) {
@@ -32,45 +34,73 @@ public class TreatmentSchedulesService {
 		schedule.setEndDate(LocalDate.parse(request.getEndDate()));
 		schedule.setStatus("Scheduled");
 		schedule.setNotes(request.getNotes());
-		treatmentSchedulesRepository.save(schedule);
+		treatmentScheduleRepository.save(schedule);
 		return new ApiResponse(true, "Schedule Created Successfully");
 	}
 
 	public List<TreatmentSchedules> viewAllSchedules() {
-		return treatmentSchedulesRepository.findAll();
+		return treatmentScheduleRepository.findAll();
 	}
 
 	public TreatmentSchedules viewScheduleById(Long id) {
-		return treatmentSchedulesRepository.findById(id).orElse(null);
+		return treatmentScheduleRepository.findById(id).orElse(null);
 	}
 
-	public TreatmentSchedules updateSchedule(Long id, TreatmentSchedules schedule) {
-		TreatmentSchedules existing = treatmentSchedulesRepository.findById(id).orElse(null);
-		if (existing != null) {
-			existing.setStartDate(schedule.getStartDate());
-			existing.setEndDate(schedule.getEndDate());
-			existing.setStatus(schedule.getStatus());
-			existing.setNotes(schedule.getNotes());
-			return treatmentSchedulesRepository.save(existing);
+	public List<TreatmentScheduleResponse> getAll() {
+		return treatmentScheduleRepository.findAll().stream().map(this::mapToResponse).collect(Collectors.toList());
+	}
+
+	public TreatmentScheduleResponse getById(Long id) {
+		TreatmentSchedules schedule = treatmentScheduleRepository.findById(id)
+				.orElseThrow(() -> new RuntimeException("Schedule not found"));
+		return mapToResponse(schedule);
+	}
+
+	public ApiResponse update(Long id, TreatmentScheduleRequest request) {
+		TreatmentSchedules schedule = treatmentScheduleRepository.findById(id)
+				.orElseThrow(() -> new RuntimeException("Schedule not found"));
+
+		Optional<MedicalResults> resultOpt = medicalResultsRepository.findById(request.getResultId());
+		if (resultOpt.isEmpty()) {
+			return new ApiResponse(false, "Medical result not found");
 		}
-		return null;
-	}
 
-	// public void deleteSchedule(Long id) {
-	// treatmentSchedulesRepository.deleteAllById(id);
-	// }
+		schedule.setMedicalResult(resultOpt.get());
+		schedule.setStartDate(LocalDate.parse(request.getStartDate()));
+		schedule.setEndDate(LocalDate.parse(request.getEndDate()));
+		schedule.setStatus(request.getStatus());
+		schedule.setNotes(request.getNotes());
+
+		treatmentScheduleRepository.save(schedule);
+
+		return new ApiResponse(true, "Treatment schedule updated successfully");
+	}
 
 	public TreatmentSchedules save(TreatmentSchedules schedule) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public void delete(int id) {
-		// TODO Auto-generated method stub
-
+	public ApiResponse delete(Long id) {
+		if (!treatmentScheduleRepository.existsById(id)) {
+			return new ApiResponse(false, "Schedule not found");
+		}
+		treatmentScheduleRepository.deleteById(id);
+		return new ApiResponse(true, "Schedule deleted successfully");
 	}
 
 	public List<TreatmentSchedules> getSchedulesByResult(Long resultId) {
-		return treatmentSchedulesRepository.findByMedicalResult_ResultId(resultId);
+		return treatmentScheduleRepository.findByMedicalResult_ResultId(resultId);
+	}
+
+	private TreatmentScheduleResponse mapToResponse(TreatmentSchedules schedule) {
+		TreatmentScheduleResponse res = new TreatmentScheduleResponse();
+		res.setScheduleId(schedule.getScheduleId());
+		res.setMedicalResultId(schedule.getMedicalResult().getResultId());
+		res.setStartDate(schedule.getStartDate());
+		res.setEndDate(schedule.getEndDate());
+		res.setStatus(schedule.getStatus());
+		res.setNotes(schedule.getNotes());
+		return res;
 	}
 }

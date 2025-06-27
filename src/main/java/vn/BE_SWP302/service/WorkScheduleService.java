@@ -2,45 +2,64 @@ package vn.BE_SWP302.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import vn.BE_SWP302.domain.User;
 import vn.BE_SWP302.domain.WorkSchedule;
+import vn.BE_SWP302.domain.request.WorkScheduleRequest;
 import vn.BE_SWP302.domain.response.ApiResponse;
+import vn.BE_SWP302.domain.response.WorkScheduleResponse;
+import vn.BE_SWP302.repository.UserRepository;
 import vn.BE_SWP302.repository.WorkScheduleRepository;
 
 @Service
+@RequiredArgsConstructor
 public class WorkScheduleService {
+
 	private final WorkScheduleRepository workScheduleRepository;
+	private final UserRepository userRepository;
 
-	@Autowired
-	WorkScheduleRepository repository;
+	public ApiResponse create(WorkScheduleRequest request) {
+		Optional<User> doctorOpt = userRepository.findById(request.getDoctorId());
+		if (doctorOpt.isEmpty())
+			return new ApiResponse(false, "Doctor not found");
 
-	public ApiResponse createWorkSchedule(WorkScheduleRequest request) {
-		workScheduleRepository.save(request);
-		return new ApiResponse(true, "Work schedule created successfully");
+		WorkSchedule workSchedule = new WorkSchedule();
+		workSchedule.setDoctor(doctorOpt.get());
+		workSchedule.setStartTime(request.getStartTime());
+		workSchedule.setEndTime(request.getEndTime());
+		workSchedule.setIsAvailable(true);
+		workSchedule.setNotes(request.getNotes());
 
-	public List<WorkSchedule> findAll() {
-		return repository.findAll();
+		workScheduleRepository.save(workSchedule);
+		return new ApiResponse(true, "Work schedule created");
 	}
 
-	public WorkSchedule findById(Long id) {
-		return repository.findById(id).orElse(null);
-	}
+	public List<WorkScheduleResponse> getByDoctor(Long doctorId) {
+		Optional<User> doctorOpt = userRepository.findById(doctorId);
+		if (doctorOpt.isEmpty())
+			return List.of();
 
-	public WorkSchedule save(WorkSchedule workSchedule) {
-		return repository.save(workSchedule);
-	}
-
-	public void delete(Long id) {
-		repository.deleteById(id);
+		return workScheduleRepository.findByDoctor(doctorOpt.get()).stream().map(ws -> {
+			WorkScheduleResponse res = new WorkScheduleResponse();
+			res.setScheduleId(ws.getScheduleId());
+			res.setDoctorId(ws.getDoctor().getId());
+			res.setDoctorName(ws.getDoctor().getName());
+			res.setStartTime(ws.getStartTime());
+			res.setEndTime(ws.getEndTime());
+			res.setIsAvailable(ws.getIsAvailable());
+			res.setNotes(ws.getNotes());
+			return res;
+		}).collect(Collectors.toList());
 	}
 
 	public boolean isDoctorAvailable(User doctor, LocalDateTime appointmentTime) {
-		// TODO: Implement actual logic
-		return true;
+		List<WorkSchedule> schedules = workScheduleRepository
+				.findByDoctorAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(
+						doctor, appointmentTime, appointmentTime);
+		return schedules.stream().anyMatch(WorkSchedule::getIsAvailable);
 	}
 
 	public WorkSchedule findByDoctorAndTime(User doctor, LocalDateTime time) {

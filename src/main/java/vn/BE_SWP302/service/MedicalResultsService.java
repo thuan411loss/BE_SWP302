@@ -1,8 +1,8 @@
 package vn.BE_SWP302.service;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -12,6 +12,7 @@ import vn.BE_SWP302.domain.MedicalResults;
 import vn.BE_SWP302.domain.User;
 import vn.BE_SWP302.domain.request.MedicalResultsRequest;
 import vn.BE_SWP302.domain.response.ApiResponse;
+import vn.BE_SWP302.domain.response.MedicalResultResponse;
 import vn.BE_SWP302.repository.ExaminationRepository;
 import vn.BE_SWP302.repository.MedicalResultsRepository;
 import vn.BE_SWP302.repository.UserRepository;
@@ -38,14 +39,24 @@ public class MedicalResultsService {
 		results.setExamination(examination.get());
 		results.setTestName(request.getTestName());
 		results.setResultValue(request.getResultValue());
-		results.setResultDate(LocalDate.parse(request.getResultDate()));
+		results.setResultDate(request.getResultDate());
 		results.setStaff(staff.get());
 		medicalResultsRepository.save(results);
 		return new ApiResponse(true, "Medical results created successfully");
 	}
 
-	public List<MedicalResults> findAll() {
-		return medicalResultsRepository.findAll();
+	public List<MedicalResultResponse> getByExam(Long examId) {
+		return medicalResultsRepository.findByExamination_ExamId(examId)
+				.stream()
+				.map(r -> {
+					MedicalResultResponse dto = new MedicalResultResponse();
+					dto.setResultId(r.getResultId());
+					dto.setTestName(r.getTestName());
+					dto.setResultValue(r.getResultValue());
+					dto.setResultDate(r.getResultDate());
+					// dto.setStaffName(r.getStaff().getFullName()); liên quan đến bảng user
+					return dto;
+				}).collect(Collectors.toList());
 	}
 
 	public MedicalResults findById(Long id) {
