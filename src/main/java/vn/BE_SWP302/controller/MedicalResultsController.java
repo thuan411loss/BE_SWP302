@@ -10,24 +10,23 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.RequiredArgsConstructor;
 import vn.BE_SWP302.domain.MedicalResults;
-import vn.BE_SWP302.domain.dto.ApiResponse;
-import vn.BE_SWP302.domain.dto.MedicalResultsRequest;
+import vn.BE_SWP302.domain.request.MedicalResultsRequest;
+import vn.BE_SWP302.domain.response.ApiResponse;
 import vn.BE_SWP302.service.MedicalResultsService;
 
 @RestController
 @RequestMapping("/api/results")
+@RequiredArgsConstructor
+
 public class MedicalResultsController {
 
     private final MedicalResultsService medicalResultsService;
 
-    public MedicalResultsController(MedicalResultsService medicalResultsService) {
-        this.medicalResultsService = medicalResultsService;
-    }
-
     @PostMapping("/add")
-    public ResponseEntity<ApiResponse> addResult(@RequestBody MedicalResultsRequest request) {
-        return ResponseEntity.ok(medicalResultsService.addMedicalResult(request));
+    public ResponseEntity<ApiResponse> createMedicalResults(@RequestBody MedicalResultsRequest request) {
+        return ResponseEntity.ok(medicalResultsService.createMedicalResults(request));
     }
 
     @GetMapping("/exam/{examId}")

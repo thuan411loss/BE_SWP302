@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.http.ResponseEntity;
 import lombok.RequiredArgsConstructor;
-import vn.BE_SWP302.domain.dto.ApiResponse;
-import vn.BE_SWP302.domain.dto.FeedbackRequest;
+import vn.BE_SWP302.domain.request.FeedbackRequest;
+import vn.BE_SWP302.domain.response.ApiResponse;
 import vn.BE_SWP302.service.FeedbackService;
 import java.util.List;
 
@@ -17,7 +17,6 @@ import java.util.List;
 @RequestMapping("/api/feedback")
 @RequiredArgsConstructor
 class FeedbackController {
-
     private final FeedbackService feedbackService;
 
     @PostMapping("/submit")
@@ -25,8 +24,13 @@ class FeedbackController {
         return ResponseEntity.ok(feedbackService.createFeedback(request));
     }
 
+    @PostMapping
+    public ResponseEntity<ApiResponse> create(@RequestBody FeedbackRequest request) {
+        return ResponseEntity.ok(feedbackService.createFeedback(request));
+    }
+
     @GetMapping("/doctor/{doctorId}")
-    public ResponseEntity<List<FeedbackRequest>> getDoctorFeedback(@PathVariable Long doctorId) {
+    public ResponseEntity<List<FeedbackResponse>> getDoctorFeedback(@PathVariable Long doctorId) {
         return ResponseEntity.ok(feedbackService.getDoctorFeedback(doctorId));
     }
 }
