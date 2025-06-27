@@ -6,6 +6,7 @@ import vn.BE_SWP302.domain.User;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
@@ -15,5 +16,8 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     User findByRefreshTokenAndEmail(String token, String email);
 
     boolean existsByEmail(String email);
+
+    @Query("SELECT COUNT(u) FROM User u WHERE u.role.roleName = :roleName")
+    long countByRoleName(String roleName);
 
 }

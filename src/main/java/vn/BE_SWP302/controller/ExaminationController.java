@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import vn.BE_SWP302.domain.Examination;
 import vn.BE_SWP302.domain.request.ExaminationRequest;
 import vn.BE_SWP302.domain.response.ApiResponse;
+import vn.BE_SWP302.domain.response.ExaminationResponse;
 import vn.BE_SWP302.service.ExaminationService;
 
 @RestController
@@ -32,7 +33,7 @@ public class ExaminationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Examination>> getAllExaminations() {
+    public ResponseEntity<List<ExaminationResponse>> getAllExaminations() {
         return ResponseEntity.ok(examinationService.findAll());
     }
 

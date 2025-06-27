@@ -31,13 +31,17 @@ public class Prescription {
 	@JoinColumn(name = "result_id")
 	private MedicalResults medicalResult;
 
+	@ManyToOne
+	@JoinColumn(name = "treatment_record_id")
+	private TreatmentRecord treatmentRecord;
+
 	@Column(name = "medicine_name")
 	private String medicineName;
 
 	@Column(name = "dosage", length = 100)
 	private String dosage;
 
-	@Column(name = "usage_instruction", columnDefinition = "TEXT")
-	private String usageInstruction;
+	@Column(name = "instruction", columnDefinition = "TEXT")
+	private String Instruction;
 
 }
