@@ -6,8 +6,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import vn.BE_SWP302.domain.Invoice;
-import vn.BE_SWP302.domain.dto.ApiResponse;
-import vn.BE_SWP302.domain.dto.InvoiceRequest;
+import vn.BE_SWP302.domain.request.InvoiceRequest;
+import vn.BE_SWP302.domain.response.ApiResponse;
 import vn.BE_SWP302.repository.InvoiceRepository;
 
 @Service

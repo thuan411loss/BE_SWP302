@@ -1,4 +1,4 @@
-package vn.BE_SWP302.domain.dto;
+package vn.BE_SWP302.domain.request;
 
 import jakarta.validation.constraints.NotBlank;
 

@@ -1,4 +1,4 @@
-package vn.BE_SWP302.domain.dto;
+package vn.BE_SWP302.domain.response;
 
 import java.time.Instant;
 

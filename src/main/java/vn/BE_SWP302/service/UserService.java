@@ -6,11 +6,11 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import vn.BE_SWP302.domain.User;
-import vn.BE_SWP302.domain.dto.Meta;
-import vn.BE_SWP302.domain.dto.ResCreateUserDTO;
-import vn.BE_SWP302.domain.dto.ResUpdateUserDTO;
-import vn.BE_SWP302.domain.dto.ResUserDTO;
-import vn.BE_SWP302.domain.dto.ResultPaginationDTO;
+import vn.BE_SWP302.domain.request.Meta;
+import vn.BE_SWP302.domain.request.ResultPaginationDTO;
+import vn.BE_SWP302.domain.response.ResCreateUserDTO;
+import vn.BE_SWP302.domain.response.ResUpdateUserDTO;
+import vn.BE_SWP302.domain.response.ResUserDTO;
 import vn.BE_SWP302.repository.UserRepository;
 
 import java.util.List;

@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import vn.BE_SWP302.domain.User;
-import vn.BE_SWP302.domain.dto.LoginDTO;
-import vn.BE_SWP302.domain.dto.ResLoginDTO;
+import vn.BE_SWP302.domain.request.LoginDTO;
+import vn.BE_SWP302.domain.response.ResLoginDTO;
 import vn.BE_SWP302.service.UserService;
 import vn.BE_SWP302.util.SecurityUtil;
 import vn.BE_SWP302.util.annotation.ApiMessage;

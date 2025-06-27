@@ -9,10 +9,10 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import vn.BE_SWP302.domain.Booking;
 import vn.BE_SWP302.domain.Examination;
-import vn.BE_SWP302.domain.dto.ApiResponse;
+import vn.BE_SWP302.domain.request.ExaminationRequest;
 import vn.BE_SWP302.repository.BookingRepository;
 import vn.BE_SWP302.repository.ExaminationRepository;
-import vn.BE_SWP302.domain.dto.ExaminationRequest;
+import vn.BE_SWP302.domain.response.ApiResponse;
 
 @Service
 @RequiredArgsConstructor

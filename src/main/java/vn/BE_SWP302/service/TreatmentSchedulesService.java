@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import vn.BE_SWP302.domain.MedicalResults;
 import vn.BE_SWP302.domain.TreatmentSchedules;
-import vn.BE_SWP302.domain.dto.TreatmentScheduleRequest;
-import vn.BE_SWP302.domain.dto.ApiResponse;
+import vn.BE_SWP302.domain.request.TreatmentScheduleRequest;
+import vn.BE_SWP302.domain.response.ApiResponse;
 import vn.BE_SWP302.repository.MedicalResultsRepository;
 import vn.BE_SWP302.repository.TreatmentSchedulesRepository;
 

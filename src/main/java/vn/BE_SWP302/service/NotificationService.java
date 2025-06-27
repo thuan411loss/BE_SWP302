@@ -3,10 +3,11 @@ package vn.BE_SWP302.service;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import java.util.Date;
-import vn.BE_SWP302.domain.dto.ApiResponse;
-import vn.BE_SWP302.domain.dto.NotificationRequest;
+
+import vn.BE_SWP302.domain.response.ApiResponse;
 import vn.BE_SWP302.domain.Booking;
 import vn.BE_SWP302.domain.User;
+import vn.BE_SWP302.domain.request.NotificationRequest;
 import vn.BE_SWP302.domain.Notification; // Sửa lại import này cho đúng entity của bạn
 import vn.BE_SWP302.repository.NotificationRepository; // Thêm import repository
 import vn.BE_SWP302.repository.UserRepository;

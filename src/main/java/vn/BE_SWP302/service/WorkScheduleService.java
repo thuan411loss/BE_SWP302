@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import vn.BE_SWP302.domain.User;
 import vn.BE_SWP302.domain.WorkSchedule;
-import vn.BE_SWP302.domain.dto.ApiResponse;
+import vn.BE_SWP302.domain.response.ApiResponse;
 import vn.BE_SWP302.repository.WorkScheduleRepository;
 
 @Service
