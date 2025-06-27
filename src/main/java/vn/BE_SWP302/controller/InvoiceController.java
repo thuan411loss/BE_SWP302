@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import vn.BE_SWP302.domain.Invoice;
 import vn.BE_SWP302.domain.request.InvoiceRequest;
 import vn.BE_SWP302.domain.response.ApiResponse;
+import vn.BE_SWP302.domain.response.InvoiceResponse;
 import vn.BE_SWP302.service.InvoiceService;
 
 @RestController
