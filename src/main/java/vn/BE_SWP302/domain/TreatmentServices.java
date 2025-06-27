@@ -1,12 +1,12 @@
 package vn.BE_SWP302.domain;
 
-import java.math.BigDecimal;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,17 +26,24 @@ public class TreatmentServices {
 	@Column(name = "service_id")
 	private Long serviceId;
 
-	@Column(name = "service_name", nullable = false)
-	private String serviceName;
+	@Column(name = "name", nullable = false)
+	private String name;
+
+	@ManyToOne
+	@JoinColumn(name = "user_id", nullable = false) // Người tạo dịch vụ (thường là admin hoặc bác sĩ)
+	private User user;
 
 	@Column(name = "description", columnDefinition = "TEXT")
 	private String description;
 
-	@Column(name = "price")
-	private BigDecimal price;
+	@Column(name = "type", length = 50)
+	private String type;
+
+	@Column(name = "fee")
+	private Double fee;
 
 	@Column(name = "duration_minutes")
-	private Integer durationMinutes;
+	private Integer durationDays;
 
 	@Column(name = "is_active")
 	private Boolean isActive = true;

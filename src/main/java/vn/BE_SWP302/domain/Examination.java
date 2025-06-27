@@ -29,7 +29,8 @@ public class Examination {
 	@JoinColumn(name = "booking_id", nullable = false)
 	private Booking booking;
 
-	private LocalDateTime exam_date;
+	@Column(name = "exam_date")
+	private LocalDateTime examDate;
 
 	@Column(columnDefinition = "TEXT")
 	private String diagnosis;
