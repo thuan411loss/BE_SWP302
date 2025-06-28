@@ -33,7 +33,7 @@ public class TreatmentServicesService {
 		service.setDescription(request.getDescription());
 		service.setType(request.getType());
 		service.setFee(request.getFee());
-		service.setDurationDays(request.getDurationDays());
+		service.setDurationMinutes(request.getDurationMinutes());
 
 		repository.save(service);
 		return new ApiResponse(true, "Service created successfully");
@@ -47,7 +47,7 @@ public class TreatmentServicesService {
 			res.setDescription(s.getDescription());
 			res.setType(s.getType());
 			res.setFee(s.getFee());
-			res.setDurationDays(s.getDurationDays());
+			res.setDurationMinutes(s.getDurationMinutes());
 			return res;
 		}).collect(Collectors.toList());
 	}

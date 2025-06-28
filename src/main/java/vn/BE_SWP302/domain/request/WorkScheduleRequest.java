@@ -10,7 +10,7 @@ import vn.BE_SWP302.domain.User;
 @Getter
 @Setter
 public class WorkScheduleRequest {
-    private Long doctorId;
+    private Long userId;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private String notes;

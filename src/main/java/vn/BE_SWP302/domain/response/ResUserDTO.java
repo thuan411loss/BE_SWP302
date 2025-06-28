@@ -6,7 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import vn.BE_SWP302.util.constant.GenderEnum;
+import vn.BE_SWP302.domain.enums.GenderEnum;
+
 
 @Getter
 @Setter

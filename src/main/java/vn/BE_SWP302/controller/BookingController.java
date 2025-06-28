@@ -32,7 +32,7 @@ public class BookingController {
 		return bookingService.findById(id);
 	}
 
-	@PostMapping
+	@PostMapping("/create")
 	public Booking create(@RequestBody Booking booking) {
 		return bookingService.save(booking);
 	}

@@ -6,8 +6,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
+import vn.BE_SWP302.domain.enums.GenderEnum;
 import vn.BE_SWP302.util.SecurityUtil;
-import vn.BE_SWP302.util.constant.GenderEnum;
+
 
 @Entity
 @Getter
@@ -25,6 +26,7 @@ public class User {
 
     private int age;
     @Enumerated(EnumType.STRING)
+    @Column(name = "gender")
     private GenderEnum gender;
     private String address;
 

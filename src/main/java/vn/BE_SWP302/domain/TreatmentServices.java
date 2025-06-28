@@ -43,7 +43,7 @@ public class TreatmentServices {
 	private Double fee;
 
 	@Column(name = "duration_minutes")
-	private Integer durationDays;
+	private Integer durationMinutes;
 
 	@Column(name = "is_active")
 	private Boolean isActive = true;

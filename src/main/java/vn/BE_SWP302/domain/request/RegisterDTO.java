@@ -2,8 +2,10 @@ package vn.BE_SWP302.domain.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import vn.BE_SWP302.domain.enums.GenderEnum;
 
 @Getter
 @Setter
@@ -20,5 +22,6 @@ public class RegisterDTO {
 
     private int age;
     private String address;
-    private String gender; // hoặc GenderEnum nếu muốn
+    @NotNull(message = "Giới tính không được để trống")
+    private GenderEnum gender; // hoặc GenderEnum nếu muốn
 }

@@ -21,7 +21,7 @@ public class WorkScheduleController {
 
     private final WorkScheduleService workScheduleService;
 
-    @PostMapping
+    @PostMapping("create")
     public ResponseEntity<ApiResponse> create(@RequestBody WorkScheduleRequest request) {
         return ResponseEntity.ok(workScheduleService.create(request));
     }

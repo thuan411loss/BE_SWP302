@@ -13,5 +13,5 @@ public class TreatmentServicesResponse {
     private String description;
     private String type;
     private Double fee;
-    private Integer durationDays;
+    private Integer durationMinutes;
 }
