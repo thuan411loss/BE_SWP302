@@ -25,6 +25,7 @@ import vn.BE_SWP302.util.annotation.ApiMessage;
 import vn.BE_SWP302.util.error.IdinvaliadException;
 
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -83,6 +84,17 @@ public class UserController {
 
         return ResponseEntity.ok(this.userService.fetchAllUsers(spec, pageable));
 
+    }
+
+    // API test đơn giản để kiểm tra
+    @GetMapping("/users/test")
+    @ApiMessage("test users with simple filter")
+    public ResponseEntity<ResultPaginationDTO> testUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);
+        return ResponseEntity.ok(this.userService.fetchAllUsers(null, pageable));
     }
 
     @PutMapping("users")

@@ -8,11 +8,13 @@ import jakarta.validation.Valid;
 import vn.BE_SWP302.domain.Role;
 import vn.BE_SWP302.domain.User;
 import vn.BE_SWP302.domain.request.ChangeRoleDTO;
+import vn.BE_SWP302.domain.request.CreateFirstAdminDTO;
 import vn.BE_SWP302.domain.response.ResCreateUserDTO;
 import vn.BE_SWP302.domain.response.ResAdminUserDTO;
 import vn.BE_SWP302.repository.RoleRepository;
 import vn.BE_SWP302.service.UserService;
 import vn.BE_SWP302.util.annotation.ApiMessage;
+import vn.BE_SWP302.util.error.IdinvaliadException;
 
 import java.util.List;
 
@@ -33,29 +35,65 @@ public class AdminController {
     // Tạo admin đầu tiên (chỉ dùng 1 lần)
     @PostMapping("/create-first-admin")
     @ApiMessage("Create first admin")
-    public ResponseEntity<?> createFirstAdmin(@RequestBody CreateFirstAdminDTO request) {
+    public ResponseEntity<?> createFirstAdmin(@Valid @RequestBody CreateFirstAdminDTO request)
+            throws IdinvaliadException {
         try {
+            // Kiểm tra email đã tồn tại chưa
+            if (userService.isEmailExist(request.getEmail())) {
+                throw new IdinvaliadException("Email " + request.getEmail() + " đã tồn tại trong hệ thống");
+            }
+
             // Encode password
             String encodedPassword = passwordEncoder.encode(request.getPassword());
             User admin = userService.createFirstAdmin(request.getEmail(), encodedPassword, request.getName());
             ResCreateUserDTO res = userService.convertToResCreateUserDTO(admin);
             return ResponseEntity.ok(res);
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            throw new IdinvaliadException(e.getMessage());
         }
+    }
+
+    // Lấy thông tin admin hiện tại
+    @GetMapping("/admin-info")
+    @ApiMessage("Get current admin info")
+    public ResponseEntity<?> getAdminInfo() throws IdinvaliadException {
+        List<User> admins = userService.getUsersByRole("Admin");
+        if (admins.isEmpty()) {
+            throw new IdinvaliadException("Chưa có admin nào trong hệ thống");
+        }
+
+        // Lấy admin đầu tiên (vì chỉ có 1 admin)
+        User admin = admins.get(0);
+        ResAdminUserDTO res = userService.convertToResAdminUserDTO(admin);
+        return ResponseEntity.ok(res);
     }
 
     // Lấy danh sách tất cả roles
     @GetMapping("/roles")
     @ApiMessage("Get all available roles")
     public ResponseEntity<List<Role>> getAllRoles() {
-        return ResponseEntity.ok(roleRepository.findAll());
+        List<Role> roles = roleRepository.findAll();
+        if (roles.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(roles);
     }
 
     // Lấy danh sách users theo role
     @GetMapping("/users/role/{roleName}")
     @ApiMessage("Get users by role")
-    public ResponseEntity<List<ResAdminUserDTO>> getUsersByRole(@PathVariable String roleName) {
+    public ResponseEntity<List<ResAdminUserDTO>> getUsersByRole(@PathVariable String roleName)
+            throws IdinvaliadException {
+        if (roleName == null || roleName.trim().isEmpty()) {
+            throw new IdinvaliadException("Role name không được để trống");
+        }
+
+        // Kiểm tra role có tồn tại không
+        Role role = roleRepository.findByRoleName(roleName);
+        if (role == null) {
+            throw new IdinvaliadException("Role '" + roleName + "' không tồn tại trong hệ thống");
+        }
+
         List<User> users = userService.getUsersByRole(roleName);
         List<ResAdminUserDTO> userDTOs = users.stream()
                 .map(userService::convertToResAdminUserDTO)
@@ -66,57 +104,64 @@ public class AdminController {
     // Thay đổi role của user
     @PutMapping("/users/change-role")
     @ApiMessage("Change user role")
-    public ResponseEntity<?> changeUserRole(@Valid @RequestBody ChangeRoleDTO changeRoleDTO) {
+    public ResponseEntity<?> changeUserRole(@Valid @RequestBody ChangeRoleDTO changeRoleDTO)
+            throws IdinvaliadException {
         try {
+            // Validate input
+            if (changeRoleDTO.getUserId() == null) {
+                throw new IdinvaliadException("User ID không được để trống");
+            }
+            if (changeRoleDTO.getRoleId() == null) {
+                throw new IdinvaliadException("Role ID không được để trống");
+            }
+
+            // Kiểm tra user có tồn tại không
+            User existingUser = userService.fetchUserById(changeRoleDTO.getUserId());
+            if (existingUser == null) {
+                throw new IdinvaliadException("User với ID " + changeRoleDTO.getUserId() + " không tồn tại");
+            }
+
+            // Kiểm tra role có tồn tại không
+            Role existingRole = roleRepository.findById(changeRoleDTO.getRoleId()).orElse(null);
+            if (existingRole == null) {
+                throw new IdinvaliadException("Role với ID " + changeRoleDTO.getRoleId() + " không tồn tại");
+            }
+
+            // Bảo vệ admin duy nhất - không cho phép thay đổi role của admin
+            if (existingUser.getRole() != null && "Admin".equalsIgnoreCase(existingUser.getRole().getRoleName())) {
+                throw new IdinvaliadException("Không thể thay đổi role của admin duy nhất trong hệ thống");
+            }
+
+            // Không cho phép tạo thêm admin
+            if ("Admin".equalsIgnoreCase(existingRole.getRoleName())) {
+                List<User> admins = userService.getUsersByRole("Admin");
+                if (!admins.isEmpty()) {
+                    throw new IdinvaliadException("Hệ thống chỉ cho phép 1 admin duy nhất");
+                }
+            }
+
             User updatedUser = userService.changeUserRole(changeRoleDTO.getUserId(), changeRoleDTO.getRoleId());
             ResAdminUserDTO res = userService.convertToResAdminUserDTO(updatedUser);
             return ResponseEntity.ok(res);
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            throw new IdinvaliadException(e.getMessage());
         }
     }
 
     // Lấy thông tin user cụ thể
     @GetMapping("/users/{userId}")
     @ApiMessage("Get user by ID")
-    public ResponseEntity<?> getUserById(@PathVariable Long userId) {
+    public ResponseEntity<ResAdminUserDTO> getUserById(@PathVariable Long userId) throws IdinvaliadException {
+        if (userId == null) {
+            throw new IdinvaliadException("User ID không được để trống");
+        }
+
         User user = userService.fetchUserById(userId);
         if (user == null) {
-            return ResponseEntity.notFound().build();
+            throw new IdinvaliadException("User với ID " + userId + " không tồn tại");
         }
+
         ResAdminUserDTO res = userService.convertToResAdminUserDTO(user);
         return ResponseEntity.ok(res);
-    }
-
-    // Inner class cho DTO tạo admin đầu tiên
-    public static class CreateFirstAdminDTO {
-        private String email;
-        private String password;
-        private String name;
-
-        // Getters and setters
-        public String getEmail() {
-            return email;
-        }
-
-        public void setEmail(String email) {
-            this.email = email;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public void setPassword(String password) {
-            this.password = password;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
     }
 }

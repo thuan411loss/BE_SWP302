@@ -57,6 +57,24 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    // Method để tạo user với role name
+    public User createUserWithRole(String email, String password, String name, String roleName) {
+        // Tìm role theo tên
+        Role role = roleRepository.findByRoleName(roleName);
+        if (role == null) {
+            throw new RuntimeException("Role '" + roleName + "' không tồn tại");
+        }
+
+        User user = new User();
+        user.setEmail(email);
+        user.setPassword(password);
+        user.setName(name);
+        user.setRole(role);
+        user.setAge(0); // Có thể set sau
+
+        return userRepository.save(user);
+    }
+
     public void handleDeleteUser(Long id) {
         this.userRepository.deleteById(id);
     }
