@@ -90,17 +90,31 @@ public class BookingService {
 	}
 
 	public Booking findById(Long id) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'findById'");
+		return bookingRepository.findById(id).orElseThrow(() -> new RuntimeException("Booking not found"));
 	}
 
 	public Booking save(Booking booking) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'save'");
+		return bookingRepository.save(booking);
 	}
 
 	public void delete(Long id) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'delete'");
+		if (!bookingRepository.existsById(id)) {
+			throw new RuntimeException("Booking not found");
+		}
+		bookingRepository.deleteById(id);
+	}
+
+	public BookingResponse toResponse(Booking booking) {
+		BookingResponse res = new BookingResponse();
+		res.setId(booking.getBookingId());
+		res.setAppointmentTime(booking.getBookingDate());
+		res.setStatus(booking.getStatus());
+		if (booking.getCustomer() != null)
+			res.setCustomerName(booking.getCustomer().getName());
+		if (booking.getWork() != null && booking.getWork().getDoctor() != null)
+			res.setDoctorName(booking.getWork().getDoctor().getName());
+		if (booking.getService() != null)
+			res.setServiceName(booking.getService().getName());
+		return res;
 	}
 }

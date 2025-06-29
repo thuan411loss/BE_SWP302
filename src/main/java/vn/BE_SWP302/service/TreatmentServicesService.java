@@ -63,4 +63,8 @@ public class TreatmentServicesService {
 	public void delete(Long id) {
 		repository.deleteById(id);
 	}
+
+	public TreatmentServices findByName(String name) {
+		return repository.findByName(name);
+	}
 }

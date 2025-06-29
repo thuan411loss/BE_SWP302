@@ -9,7 +9,13 @@ import java.time.LocalDateTime;
 @Getter
 public class ExaminationResponse {
     private Long examId;
+    private Long bookingId;
     private LocalDateTime examDate;
     private String diagnosis;
     private String recommendation;
+
+    // Thông tin booking (nếu cần)
+    private String customerName;
+    private String doctorName;
+    private String serviceName;
 }

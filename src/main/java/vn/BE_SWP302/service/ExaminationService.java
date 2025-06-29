@@ -52,6 +52,17 @@ public class ExaminationService {
 		return examinationRepository.findById(id).orElse(null);
 	}
 
+	public List<ExaminationResponse> findByBookingId(Long bookingId) {
+		return examinationRepository.findByBooking_BookingId(bookingId).stream().map(e -> {
+			ExaminationResponse res = new ExaminationResponse();
+			res.setExamId(e.getExamId());
+			res.setExamDate(e.getExamDate());
+			res.setDiagnosis(e.getDiagnosis());
+			res.setRecommendation(e.getRecommendation());
+			return res;
+		}).collect(Collectors.toList());
+	}
+
 	public Examination save(Examination examination) {
 		return examinationRepository.save(examination);
 	}

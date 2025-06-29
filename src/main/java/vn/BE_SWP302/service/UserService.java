@@ -112,9 +112,14 @@ public class UserService {
         if (currentUser != null) {
             currentUser.setName(reqUser.getName());
             currentUser.setEmail(reqUser.getEmail());
-            currentUser.setPassword(reqUser.getPassword());
+            // Chỉ update password nếu FE truyền lên
+            if (reqUser.getPassword() != null && !reqUser.getPassword().isBlank()) {
+                currentUser.setPassword(reqUser.getPassword());
+            }
             currentUser.setPhone(reqUser.getPhone());
-
+            currentUser.setAge(reqUser.getAge());
+            currentUser.setGender(reqUser.getGender());
+            currentUser.setAddress(reqUser.getAddress());
             currentUser = this.userRepository.save(currentUser);
         }
         return currentUser;
@@ -261,5 +266,13 @@ public class UserService {
         }
 
         return res;
+    }
+
+    public User findById(Long id) {
+        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    public User findByName(String name) {
+        return userRepository.findByName(name);
     }
 }
