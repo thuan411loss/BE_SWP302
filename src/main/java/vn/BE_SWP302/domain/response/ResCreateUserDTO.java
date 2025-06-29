@@ -14,7 +14,11 @@ public class ResCreateUserDTO {
     private String email;
     private GenderEnum gender;
     private String address;
+    private String phone;
     private int age;
     private Instant createdAt;
 
+    // Thêm thông tin role
+    private String roleName;
+    private Long roleId;
 }

@@ -18,9 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import jakarta.validation.Valid;
-import vn.BE_SWP302.domain.Role;
 import vn.BE_SWP302.domain.User;
-import vn.BE_SWP302.domain.enums.GenderEnum;
 import vn.BE_SWP302.domain.request.LoginDTO;
 import vn.BE_SWP302.domain.request.RegisterDTO;
 import vn.BE_SWP302.domain.response.ResLoginDTO;
@@ -38,6 +36,7 @@ public class AuthController {
     private final SecurityUtil securityUtils;
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
 
     @Value("${hoidanit.jwt.refresh-token-validity-in-seconds}")
     private long refreshTokenExpiration;
@@ -45,11 +44,13 @@ public class AuthController {
     public AuthController(AuthenticationManagerBuilder authenticationManagerBuilder,
             SecurityUtil securityUtils,
             UserService userService,
-            PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder,
+            RoleRepository roleRepository) {
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.securityUtils = securityUtils;
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
+        this.roleRepository = roleRepository;
     }
 
     @PostMapping("/auth/login")
@@ -198,16 +199,28 @@ public class AuthController {
         if (userService.isEmailExist(registerDTO.getEmail())) {
             return ResponseEntity.badRequest().body("Email đã tồn tại");
         }
+
         User user = new User();
         user.setName(registerDTO.getName());
         user.setEmail(registerDTO.getEmail());
         user.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
         user.setAge(registerDTO.getAge());
         user.setAddress(registerDTO.getAddress());
+        user.setPhone(registerDTO.getPhone());
         user.setGender(registerDTO.getGender());
-        userService.handleCreateUser(user);
+
+        // Luôn tạo user với role Customer
+        userService.handleCreateUserWithDefaultRole(user);
+
         ResCreateUserDTO res = userService.convertToResCreateUserDTO(user);
         return ResponseEntity.ok(res);
+    }
+
+    // lấy role có sẵn
+    @GetMapping("/auth/roles")
+    @ApiMessage("Get available roles for registration")
+    public ResponseEntity<?> getAvailableRoles() {
+        return ResponseEntity.ok(roleRepository.findAll());
     }
 
 }

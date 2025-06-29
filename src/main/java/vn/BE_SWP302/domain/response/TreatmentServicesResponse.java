@@ -3,8 +3,6 @@ package vn.BE_SWP302.domain.response;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.math.BigDecimal;
-
 @Setter
 @Getter
 public class TreatmentServicesResponse {

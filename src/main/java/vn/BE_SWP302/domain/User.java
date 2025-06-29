@@ -39,6 +39,7 @@ public class User {
     @Column(name = "gender")
     private GenderEnum gender;
     private String address;
+    private String phone;
 
     @Column(columnDefinition = "MEDIUMTEXT")
     private String refreshToken;
