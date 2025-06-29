@@ -4,8 +4,7 @@ import java.time.Instant;
 
 import lombok.Getter;
 import lombok.Setter;
-import vn.BE_SWP302.domain.enums.GenderEnum;
-
+import vn.BE_SWP302.util.constant.GenderEnum;
 
 @Getter
 @Setter
