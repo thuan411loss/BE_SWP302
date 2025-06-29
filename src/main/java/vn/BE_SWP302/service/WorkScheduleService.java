@@ -22,12 +22,18 @@ public class WorkScheduleService {
 	private final UserRepository userRepository;
 
 	public ApiResponse create(WorkScheduleRequest request) {
-		Optional<User> doctorOpt = userRepository.findById(request.getDoctorId());
+		Optional<User> doctorOpt = userRepository.findById(request.getUserId());
+
 		if (doctorOpt.isEmpty())
-			return new ApiResponse(false, "Doctor not found");
+			return new ApiResponse(false, "User not found");
+
+		User user = doctorOpt.get();
+		if (user.getRole() == null || !"Doctor".equalsIgnoreCase(user.getRole().getRoleName())) {
+			return new ApiResponse(false, "User is not a doctor");
+		}
 
 		WorkSchedule workSchedule = new WorkSchedule();
-		workSchedule.setDoctor(doctorOpt.get());
+		workSchedule.setDoctor(user);
 		workSchedule.setStartTime(request.getStartTime());
 		workSchedule.setEndTime(request.getEndTime());
 		workSchedule.setIsAvailable(true);
@@ -45,7 +51,7 @@ public class WorkScheduleService {
 		return workScheduleRepository.findByDoctor(doctorOpt.get()).stream().map(ws -> {
 			WorkScheduleResponse res = new WorkScheduleResponse();
 			res.setScheduleId(ws.getScheduleId());
-			res.setDoctorId(ws.getDoctor().getId());
+			res.setUserId(ws.getDoctor().getId());
 			res.setDoctorName(ws.getDoctor().getName());
 			res.setStartTime(ws.getStartTime());
 			res.setEndTime(ws.getEndTime());

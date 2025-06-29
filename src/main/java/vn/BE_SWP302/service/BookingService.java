@@ -27,6 +27,10 @@ public class BookingService {
 	private NotificationService notificationService;
 
 	public Booking createBooking(User customer, User doctor, LocalDateTime appointmentTime, TreatmentServices service) {
+		// Kiểm tra role của customer
+		if (customer.getRole() == null || !"Customer".equalsIgnoreCase(customer.getRole().getRoleName())) {
+			throw new RuntimeException("User is not a customer");
+		}
 		// Check if doctor is available at the requested time
 		if (!workScheduleService.isDoctorAvailable(doctor, appointmentTime)) {
 			throw new RuntimeException("Doctor is not available at the requested time");

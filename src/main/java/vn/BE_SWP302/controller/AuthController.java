@@ -18,11 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import jakarta.validation.Valid;
+import vn.BE_SWP302.domain.Role;
 import vn.BE_SWP302.domain.User;
+import vn.BE_SWP302.domain.enums.GenderEnum;
 import vn.BE_SWP302.domain.request.LoginDTO;
 import vn.BE_SWP302.domain.request.RegisterDTO;
 import vn.BE_SWP302.domain.response.ResLoginDTO;
 import vn.BE_SWP302.domain.response.ResCreateUserDTO;
+import vn.BE_SWP302.repository.RoleRepository;
 import vn.BE_SWP302.service.UserService;
 import vn.BE_SWP302.util.SecurityUtil;
 import vn.BE_SWP302.util.annotation.ApiMessage;
@@ -31,7 +34,6 @@ import vn.BE_SWP302.util.error.IdinvaliadException;
 @RestController
 @RequestMapping("/api/v1")
 public class AuthController {
-
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final SecurityUtil securityUtils;
     private final UserService userService;
@@ -192,6 +194,7 @@ public class AuthController {
 
     @PostMapping("/auth/register")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterDTO registerDTO) {
+
         if (userService.isEmailExist(registerDTO.getEmail())) {
             return ResponseEntity.badRequest().body("Email đã tồn tại");
         }
@@ -201,8 +204,7 @@ public class AuthController {
         user.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
         user.setAge(registerDTO.getAge());
         user.setAddress(registerDTO.getAddress());
-        // Nếu dùng GenderEnum thì cần chuyển đổi
-        // user.setGender(GenderEnum.valueOf(registerDTO.getGender()));
+        user.setGender(registerDTO.getGender());
         userService.handleCreateUser(user);
         ResCreateUserDTO res = userService.convertToResCreateUserDTO(user);
         return ResponseEntity.ok(res);

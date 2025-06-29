@@ -7,4 +7,5 @@ import vn.BE_SWP302.domain.Role;
 
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
+    Role findByRoleName(String roleName);
 }

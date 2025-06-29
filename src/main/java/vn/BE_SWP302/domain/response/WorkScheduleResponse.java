@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Setter
 public class WorkScheduleResponse {
     private Long scheduleId;
-    private Long doctorId;
+    private Long userId;
     private String doctorName;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
