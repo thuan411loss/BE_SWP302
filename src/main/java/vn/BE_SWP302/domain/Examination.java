@@ -23,13 +23,14 @@ public class Examination {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long exam_id;
+	private Long examId;
 
 	@ManyToOne
 	@JoinColumn(name = "booking_id", nullable = false)
 	private Booking booking;
 
-	private LocalDateTime exam_date;
+	@Column(name = "exam_date")
+	private LocalDateTime examDate;
 
 	@Column(columnDefinition = "TEXT")
 	private String diagnosis;

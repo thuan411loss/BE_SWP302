@@ -33,13 +33,13 @@ public class Payment {
 	@JoinColumn(name = "invoice_id")
 	private Invoice invoice;
 
-	@Column(name = "paid_amount", precision = 12, scale = 2)
-	private BigDecimal paidAmount;
-
-	@Column(name = "paid_at")
-	private LocalDateTime paidAt;
+	@Column(name = "amount", precision = 12, scale = 2)
+	private BigDecimal Amount;
 
 	@Column(name = "method", length = 50)
 	private String method;
+
+	@Column(name = "payment_date")
+	private LocalDateTime paymentDate;
 
 }

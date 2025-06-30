@@ -15,11 +15,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import jakarta.validation.Valid;
 import vn.BE_SWP302.domain.User;
-import vn.BE_SWP302.domain.dto.LoginDTO;
-import vn.BE_SWP302.domain.dto.ResLoginDTO;
+import vn.BE_SWP302.domain.request.LoginDTO;
+import vn.BE_SWP302.domain.request.RegisterDTO;
+import vn.BE_SWP302.domain.response.ResLoginDTO;
+import vn.BE_SWP302.domain.response.ResCreateUserDTO;
+import vn.BE_SWP302.repository.RoleRepository;
 import vn.BE_SWP302.service.UserService;
 import vn.BE_SWP302.util.SecurityUtil;
 import vn.BE_SWP302.util.annotation.ApiMessage;
@@ -28,21 +32,25 @@ import vn.BE_SWP302.util.error.IdinvaliadException;
 @RestController
 @RequestMapping("/api/v1")
 public class AuthController {
-
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final SecurityUtil securityUtils;
-
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
 
     @Value("${hoidanit.jwt.refresh-token-validity-in-seconds}")
     private long refreshTokenExpiration;
 
     public AuthController(AuthenticationManagerBuilder authenticationManagerBuilder,
             SecurityUtil securityUtils,
-            UserService userService) {
+            UserService userService,
+            PasswordEncoder passwordEncoder,
+            RoleRepository roleRepository) {
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.securityUtils = securityUtils;
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
+        this.roleRepository = roleRepository;
     }
 
     @PostMapping("/auth/login")
@@ -59,10 +67,13 @@ public class AuthController {
         ResLoginDTO res = new ResLoginDTO();
         User currentUserDB = this.userService.handleGetUserByUsername(loginDto.getUsername());
         if (currentUserDB != null) {
-            ResLoginDTO.UserLogin userLogin = new ResLoginDTO.UserLogin(
-                    currentUserDB.getId(),
-                    currentUserDB.getEmail(),
-                    currentUserDB.getName());
+            ResLoginDTO.UserLogin userLogin = new ResLoginDTO.UserLogin();
+            userLogin.setId(currentUserDB.getId());
+            userLogin.setEmail(currentUserDB.getEmail());
+            userLogin.setName(currentUserDB.getName());
+            if (currentUserDB.getRole() != null) {
+                userLogin.setRole(currentUserDB.getRole().getRoleName());
+            }
             res.setUser(userLogin);
 
         }
@@ -129,10 +140,13 @@ public class AuthController {
         ResLoginDTO res = new ResLoginDTO();
         User currentUserDB = this.userService.handleGetUserByUsername(email);
         if (currentUserDB != null) {
-            ResLoginDTO.UserLogin userLogin = new ResLoginDTO.UserLogin(
-                    currentUserDB.getId(),
-                    currentUserDB.getEmail(),
-                    currentUserDB.getName());
+            ResLoginDTO.UserLogin userLogin = new ResLoginDTO.UserLogin();
+            userLogin.setId(currentUserDB.getId());
+            userLogin.setEmail(currentUserDB.getEmail());
+            userLogin.setName(currentUserDB.getName());
+            if (currentUserDB.getRole() != null) {
+                userLogin.setRole(currentUserDB.getRole().getRoleName());
+            }
             res.setUser(userLogin);
 
         }
@@ -183,6 +197,36 @@ public class AuthController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, deleteSpringCookie.toString())
                 .body(null);
+    }
+
+    @PostMapping("/auth/register")
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterDTO registerDTO) {
+
+        if (userService.isEmailExist(registerDTO.getEmail())) {
+            return ResponseEntity.badRequest().body("Email đã tồn tại");
+        }
+
+        User user = new User();
+        user.setName(registerDTO.getName());
+        user.setEmail(registerDTO.getEmail());
+        user.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
+        user.setAge(registerDTO.getAge());
+        user.setAddress(registerDTO.getAddress());
+        user.setPhone(registerDTO.getPhone());
+        user.setGender(registerDTO.getGender());
+
+        // Luôn tạo user với role Customer
+        userService.handleCreateUserWithDefaultRole(user);
+
+        ResCreateUserDTO res = userService.convertToResCreateUserDTO(user);
+        return ResponseEntity.ok(res);
+    }
+
+    // lấy role có sẵn
+    @GetMapping("/auth/roles")
+    @ApiMessage("Get available roles for registration")
+    public ResponseEntity<?> getAvailableRoles() {
+        return ResponseEntity.ok(roleRepository.findAll());
     }
 
 }

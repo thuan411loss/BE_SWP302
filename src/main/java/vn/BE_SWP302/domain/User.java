@@ -9,6 +9,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -26,6 +28,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
     @NotBlank(message = "email khong duoc de trong")
     private String email;
@@ -34,8 +37,10 @@ public class User {
 
     private int age;
     @Enumerated(EnumType.STRING)
+    @Column(name = "gender")
     private GenderEnum gender;
     private String address;
+    private String phone;
 
     @Column(columnDefinition = "MEDIUMTEXT")
     private String refreshToken;
@@ -43,6 +48,10 @@ public class User {
     private Instant updatedAt;
     private String createdBy;
     private String updatedBy;
+
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
 
     @PrePersist
     public void handleBeforeCreate() {
