@@ -1,15 +1,20 @@
 package vn.BE_SWP302.domain.request;
 
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
 public class TreatmentServicesRequest {
-    private Long userId;
-    private String name;
+    private String category;
+    private String title;
     private String description;
-    private String type;
-    private Double fee;
-    private Integer durationMinutes;
+    private String duration;
+    private String successRate;
+    private List<String> features;
+    private String priceRange;
+    private String currency;
+    private String badge;
 }

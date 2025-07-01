@@ -1,12 +1,13 @@
 package vn.BE_SWP302.domain;
 
+import java.util.List;
+
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,28 +25,22 @@ public class TreatmentServices {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "service_id")
-	private Long serviceId;
+	private Long service_id;
 
-	@Column(name = "name", nullable = false)
-	private String name;
+	private String category;
+	private String title;
 
-	@ManyToOne
-	@JoinColumn(name = "user_id", nullable = false) // Người tạo dịch vụ (thường là admin hoặc bác sĩ)
-	private User user;
-
-	@Column(name = "description", columnDefinition = "TEXT")
+	@Column(columnDefinition = "TEXT")
 	private String description;
 
-	@Column(name = "type", length = 50)
-	private String type;
+	private String duration;
+	private String successRate;
 
-	@Column(name = "fee")
-	private Double fee;
+	@ElementCollection
+	private List<String> features;
 
-	@Column(name = "duration_minutes")
-	private Integer durationMinutes;
-
-	@Column(name = "is_active")
-	private Boolean isActive = true;
+	private String priceRange;
+	private String currency;
+	private String badge;
 
 }
