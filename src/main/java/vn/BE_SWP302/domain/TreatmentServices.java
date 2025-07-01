@@ -27,6 +27,9 @@ public class TreatmentServices {
 	@Column(name = "service_id")
 	private Long service_id;
 
+	@Column(name = "name")
+	private String name;
+
 	private String category;
 	private String title;
 

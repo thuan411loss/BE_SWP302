@@ -89,4 +89,9 @@ public class TreatmentServicesService {
 
 		return response;
 	}
+
+	public TreatmentServices findById(Long id) {
+		return repository.findById(id)
+				.orElseThrow(() -> new RuntimeException("Service not found"));
+	}
 }
