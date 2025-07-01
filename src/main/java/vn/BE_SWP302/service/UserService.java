@@ -133,6 +133,7 @@ public class UserService {
         return this.userRepository.existsByEmail(email);
     }
 
+
     public ResCreateUserDTO convertToResCreateUserDTO(User user) {
         ResCreateUserDTO res = new ResCreateUserDTO();
         res.setId(user.getId());

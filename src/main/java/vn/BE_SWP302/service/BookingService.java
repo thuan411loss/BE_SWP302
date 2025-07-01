@@ -11,7 +11,6 @@ import vn.BE_SWP302.domain.Booking;
 import vn.BE_SWP302.domain.TreatmentServices;
 import vn.BE_SWP302.domain.User;
 import vn.BE_SWP302.domain.WorkSchedule;
-import vn.BE_SWP302.domain.response.BookingResponse;
 import vn.BE_SWP302.repository.BookingRepository;
 import vn.BE_SWP302.util.constant.BookingStatus;
 
@@ -91,31 +90,17 @@ public class BookingService {
 	}
 
 	public Booking findById(Long id) {
-		return bookingRepository.findById(id).orElseThrow(() -> new RuntimeException("Booking not found"));
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'findById'");
 	}
 
 	public Booking save(Booking booking) {
-		return bookingRepository.save(booking);
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'save'");
 	}
 
 	public void delete(Long id) {
-		if (!bookingRepository.existsById(id)) {
-			throw new RuntimeException("Booking not found");
-		}
-		bookingRepository.deleteById(id);
-	}
-
-	public BookingResponse toResponse(Booking booking) {
-		BookingResponse res = new BookingResponse();
-		res.setId(booking.getBookingId());
-		res.setAppointmentTime(booking.getBookingDate());
-		res.setStatus(booking.getStatus());
-		if (booking.getCustomer() != null)
-			res.setCustomerName(booking.getCustomer().getName());
-		if (booking.getWork() != null && booking.getWork().getDoctor() != null)
-			res.setDoctorName(booking.getWork().getDoctor().getName());
-		if (booking.getService() != null)
-			res.setServiceName(booking.getService().getName());
-		return res;
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'delete'");
 	}
 }

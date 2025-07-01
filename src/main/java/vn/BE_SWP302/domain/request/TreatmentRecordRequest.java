@@ -6,7 +6,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TreatmentRecordRequest {
-    private Long bookingId;
+
     private String diagnosis;
+    private String name;
     private String treatmentPlan;
+    private Long bookingId;
+    private Long resultId;
 }

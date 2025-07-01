@@ -17,7 +17,7 @@ public class TreatmentRecordController {
 
     private final TreatmentRecordService treatmentRecordService;
 
-    @PostMapping
+    @PostMapping("create")
     public ResponseEntity<ApiResponse> create(@RequestBody TreatmentRecordRequest request) {
         return ResponseEntity.ok(treatmentRecordService.createTreatmentRecord(request));
     }

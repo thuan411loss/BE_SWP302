@@ -7,8 +7,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import vn.BE_SWP302.domain.TreatmentServices;
+
 import vn.BE_SWP302.domain.request.TreatmentServicesRequest;
 import vn.BE_SWP302.domain.response.TreatmentServicesResponse;
+
 import vn.BE_SWP302.repository.TreatmentServicesRepository;
 
 @Service
@@ -19,7 +21,6 @@ public class TreatmentServicesService {
 
 	public TreatmentServicesResponse create(TreatmentServicesRequest dto) {
 		TreatmentServices service = new TreatmentServices();
-
 		service.setCategory(dto.getCategory());
 		service.setTitle(dto.getTitle());
 		service.setDescription(dto.getDescription());
@@ -32,7 +33,6 @@ public class TreatmentServicesService {
 
 		TreatmentServices saved = repository.save(service);
 		return mapToResponse(saved);
-
 	}
 
 	public List<TreatmentServicesResponse> getAll() {
@@ -46,10 +46,6 @@ public class TreatmentServicesService {
 		TreatmentServices service = repository.findById(id)
 				.orElseThrow(() -> new RuntimeException("Service not found"));
 		return mapToResponse(service);
-	}
-
-	public TreatmentServices save(TreatmentServices service) {
-		return repository.save(service);
 	}
 
 	public TreatmentServicesResponse update(Long id, TreatmentServicesRequest dto) {

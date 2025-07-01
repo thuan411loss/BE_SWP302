@@ -23,7 +23,7 @@ class InvoiceController {
 
     private final InvoiceService invoiceService;
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<ApiResponse> create(@RequestBody InvoiceRequest request) {
         return ResponseEntity.ok(invoiceService.createInvoice(request));
     }

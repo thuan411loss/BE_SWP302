@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import vn.BE_SWP302.domain.request.TreatmentServicesRequest;
 import vn.BE_SWP302.domain.response.TreatmentServicesResponse;
+
 import vn.BE_SWP302.service.TreatmentServicesService;
 import java.util.List;
 
@@ -40,6 +41,7 @@ public class TreatmentServicesController {
     }
 
     @PutMapping("/{id}")
+
     public ResponseEntity<TreatmentServicesResponse> update(@PathVariable Long id,
             @RequestBody TreatmentServicesRequest dto) {
         return ResponseEntity.ok(service.update(id, dto));
@@ -50,4 +52,5 @@ public class TreatmentServicesController {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
+
 }

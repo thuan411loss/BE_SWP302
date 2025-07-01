@@ -44,9 +44,7 @@ public class MedicalResults {
 	@Column(name = "result_date")
 	private LocalDate resultDate;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "staff_id")
-	private User staff;
+
 
 	@OneToMany(mappedBy = "medicalResult", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<TreatmentSchedules> treatmentSchedules;

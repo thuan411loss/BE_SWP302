@@ -12,6 +12,5 @@ public class MedicalResultsRequest {
     private String testName;
     private String resultValue;
     private LocalDate resultDate;
-    private Long staffId;
 
 }
