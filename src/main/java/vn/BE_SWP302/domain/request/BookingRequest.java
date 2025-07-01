@@ -7,7 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class BookingRequest {
-    private Long customerId;
     private Long doctorId;
     private Long serviceId;
     private LocalDateTime appointmentTime;

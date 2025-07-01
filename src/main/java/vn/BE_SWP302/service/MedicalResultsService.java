@@ -31,16 +31,12 @@ public class MedicalResultsService {
 		if (examination.isEmpty()) {
 			return new ApiResponse(false, "Examination not found");
 		}
-		Optional<User> staff = userRepository.findById(request.getStaffId());
-		if (staff.isEmpty()) {
-			return new ApiResponse(false, "Staff not found");
-		}
+
 		MedicalResults results = new MedicalResults();
 		results.setExamination(examination.get());
 		results.setTestName(request.getTestName());
 		results.setResultValue(request.getResultValue());
 		results.setResultDate(request.getResultDate());
-		results.setStaff(staff.get());
 		medicalResultsRepository.save(results);
 		return new ApiResponse(true, "Medical results created successfully");
 	}

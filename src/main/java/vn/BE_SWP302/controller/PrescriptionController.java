@@ -17,7 +17,7 @@ public class PrescriptionController {
 
     private final PrescriptionService prescriptionService;
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<ApiResponse> create(@RequestBody PrescriptionRequest request) {
         return ResponseEntity.ok(prescriptionService.createPrescription(request));
     }

@@ -14,9 +14,9 @@ import vn.BE_SWP302.service.TreatmentProgressService;
 @RequiredArgsConstructor
 public class TreatmentProgressController {
 
-    private final TreatmentProgressService treatmentProgressService = null;
+    private final TreatmentProgressService treatmentProgressService;
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<ApiResponse> create(@RequestBody TreatmentProgressRequest request) {
         return ResponseEntity.ok(treatmentProgressService.create(request));
     }
