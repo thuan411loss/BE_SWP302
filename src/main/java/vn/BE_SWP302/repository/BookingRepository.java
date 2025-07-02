@@ -28,7 +28,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, JpaSpec
 
 	List<Booking> findByWork_DoctorAndBookingDate(User doctor, LocalDateTime bookingDate);
 
-	@Query("SELECT new vn.BE_SWP302.domain.response.PatientDTO(b.customer.name, b.customer.age, b.customer.phone) " +
+	@Query("SELECT new vn.BE_SWP302.domain.response.PatientDTO(b.bookingId, b.customer.name, b.customer.age, b.customer.phone) "
+			+
 			"FROM Booking b WHERE b.work.doctor.id = :doctorId")
 	List<PatientDTO> findPatientsByDoctorId(@Param("doctorId") Long doctorId);
 }
