@@ -6,11 +6,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import vn.BE_SWP302.domain.Booking;
 import vn.BE_SWP302.domain.User;
 import vn.BE_SWP302.domain.WorkSchedule;
 import vn.BE_SWP302.domain.request.WorkScheduleRequest;
 import vn.BE_SWP302.domain.response.ApiResponse;
 import vn.BE_SWP302.domain.response.WorkScheduleResponse;
+import vn.BE_SWP302.repository.BookingRepository;
 import vn.BE_SWP302.repository.UserRepository;
 import vn.BE_SWP302.repository.WorkScheduleRepository;
 
@@ -20,6 +23,7 @@ public class WorkScheduleService {
 
 	private final WorkScheduleRepository workScheduleRepository;
 	private final UserRepository userRepository;
+	private final BookingRepository bookingRepository;
 
 	public ApiResponse create(WorkScheduleRequest request) {
 		Optional<User> doctorOpt = userRepository.findById(request.getUserId());
@@ -73,5 +77,11 @@ public class WorkScheduleService {
 				.findByDoctorAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(doctor, time, time);
 		// Lấy lịch đầu tiên thỏa mãn (nếu có)
 		return schedules.stream().findFirst().orElse(null);
+	}
+
+	public boolean isDoctorBooked(User doctor, LocalDateTime appointmentTime) {
+		// Tìm tất cả booking của bác sĩ này tại thời điểm đó (trạng thái chưa bị hủy)
+		List<Booking> bookings = bookingRepository.findByWork_DoctorAndBookingDate(doctor, appointmentTime);
+		return !bookings.isEmpty();
 	}
 }

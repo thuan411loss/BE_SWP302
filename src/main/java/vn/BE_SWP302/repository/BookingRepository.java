@@ -20,4 +20,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, JpaSpec
 	long countByBookingDateBetween(LocalDateTime start, LocalDateTime end);
 
 	List<Booking> findByWork_DoctorAndBookingDateBetween(User doctor, LocalDateTime start, LocalDateTime end);
+
+	List<Booking> findByWork_DoctorAndBookingDate(User doctor, LocalDateTime bookingDate);
 }

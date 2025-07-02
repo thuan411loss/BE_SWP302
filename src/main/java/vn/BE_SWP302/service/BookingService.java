@@ -36,6 +36,10 @@ public class BookingService {
 		if (!workScheduleService.isDoctorAvailable(doctor, appointmentTime)) {
 			throw new RuntimeException("Doctor is not available at the requested time");
 		}
+		// Check if doctor is booked at the requested time
+		if (workScheduleService.isDoctorBooked(doctor, appointmentTime)) {
+			throw new RuntimeException("Doctor is already booked at the requested time");
+		}
 
 		// Lấy work schedule phù hợp với bác sĩ và thời gian
 		WorkSchedule work = workScheduleService.findByDoctorAndTime(doctor, appointmentTime);
