@@ -7,6 +7,7 @@ import vn.BE_SWP302.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
@@ -20,6 +21,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     @Query("SELECT COUNT(u) FROM User u WHERE u.role.roleName = :roleName")
     long countByRoleName(String roleName);
 
-    User findByName(String name);
+    @Query("SELECT u FROM User u WHERE LOWER(u.name) = LOWER(:name)")
+    User findByNameIgnoreCase(@Param("name") String name);
 
 }
