@@ -69,7 +69,9 @@ public class WorkScheduleService {
 	}
 
 	public WorkSchedule findByDoctorAndTime(User doctor, LocalDateTime time) {
-		// TODO: Thực hiện truy vấn để lấy WorkSchedule phù hợp với doctor và time
-		return null; // hoặc trả về WorkSchedule phù hợp nếu có
+		List<WorkSchedule> schedules = workScheduleRepository
+				.findByDoctorAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(doctor, time, time);
+		// Lấy lịch đầu tiên thỏa mãn (nếu có)
+		return schedules.stream().findFirst().orElse(null);
 	}
 }
