@@ -1,6 +1,5 @@
 package vn.BE_SWP302.domain;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -40,7 +39,7 @@ public class Invoice {
 	private LocalDateTime issuedDate;
 
 	@Column(name = "total_amount", precision = 12, scale = 2)
-	private BigDecimal totalAmount;
+	private Double totalAmount;
 
 	@Column(name = "status", length = 50)
 	private String status;

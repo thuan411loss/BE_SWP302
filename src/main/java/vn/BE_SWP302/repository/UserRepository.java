@@ -24,4 +24,6 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     @Query("SELECT u FROM User u WHERE LOWER(u.name) = LOWER(:name)")
     User findByNameIgnoreCase(@Param("name") String name);
 
+    long countByRole_RoleNameIgnoreCase(String roleName);
+
 }

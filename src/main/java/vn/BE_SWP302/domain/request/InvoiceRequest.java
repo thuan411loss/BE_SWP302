@@ -1,7 +1,5 @@
 package vn.BE_SWP302.domain.request;
 
-import java.math.BigDecimal;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,6 +7,6 @@ import lombok.Setter;
 @Getter
 public class InvoiceRequest {
     private Long bookingId;
-    private BigDecimal totalAmount;
+    private Double totalAmount;
     private String status;
 }
