@@ -25,6 +25,7 @@ import vn.BE_SWP302.service.BookingService;
 import vn.BE_SWP302.service.UserService;
 import vn.BE_SWP302.service.TreatmentServicesService;
 import vn.BE_SWP302.domain.request.BookingFormRequest;
+import vn.BE_SWP302.util.SecurityUtil;
 import vn.BE_SWP302.util.error.IdinvaliadException;
 
 @RestController
@@ -63,33 +64,28 @@ public class BookingController {
 	}
 
 	@PostMapping("/form")
-	public ResponseEntity<BookingResponse> createFromForm(@RequestBody BookingFormRequest request)
-			throws IdinvaliadException {
-		// Ghép ngày + giờ thành LocalDateTime
-		LocalDate date = LocalDate.parse(request.getDate());
-		LocalTime time = LocalTime.parse(request.getTime());
-		LocalDateTime appointmentTime = LocalDateTime.of(date, time);
+	public ResponseEntity<?> createFromForm(@RequestBody BookingFormRequest request) {
+		String email = SecurityUtil.getCurrentUserLogin().orElse("");
+		User customer = userService.handleGetUserByUsername(email);
+		if (customer == null)
+			throw new IdinvaliadException("Khách hàng không tồn tại");
 
-		// Tìm doctor theo tên
 		User doctor = userService.findByName(request.getDoctor());
 		if (doctor == null)
 			throw new IdinvaliadException("Bác sĩ không tồn tại");
 
-		// Tìm service theo tên
 		TreatmentServices service = treatmentServicesService.findByName(request.getService());
 		if (service == null)
 			throw new IdinvaliadException("Dịch vụ không tồn tại");
 
-		// Lấy customer từ context đăng nhập hoặc truyền lên (ví dụ: lấy theo email,
-		// hoặc tên)
-		// Ở đây demo lấy theo tên
-		User customer = userService.findByName(request.getCustomer());
-		if (customer == null)
-			throw new IdinvaliadException("Khách hàng không tồn tại");
+		LocalDate date = LocalDate.parse(request.getDate());
+		LocalTime time = LocalTime.parse(request.getTime());
+		LocalDateTime appointmentTime = LocalDateTime.of(date, time);
 
 		Booking booking = bookingService.createBooking(customer, doctor, appointmentTime, service);
 		booking.setNote(request.getNotes());
 		bookingService.save(booking);
+
 		return ResponseEntity.ok(bookingService.toResponse(booking));
 	}
 
