@@ -53,4 +53,10 @@ public class TreatmentServicesController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/names")
+    public ResponseEntity<List<String>> getAllServiceNames() {
+        List<String> serviceNames = service.getServiceNames();
+        return ResponseEntity.ok(serviceNames);
+    }
+
 }

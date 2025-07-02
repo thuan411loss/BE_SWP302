@@ -94,4 +94,10 @@ public class TreatmentServicesService {
 		return repository.findById(id)
 				.orElseThrow(() -> new RuntimeException("Service not found"));
 	}
+
+	public List<String> getServiceNames() {
+		return repository.findAll().stream()
+				.map(TreatmentServices::getName)
+				.collect(Collectors.toList());
+	}
 }

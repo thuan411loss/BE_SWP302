@@ -104,4 +104,10 @@ public class BookingController {
 		bookingService.delete(id);
 		return ResponseEntity.noContent().build();
 	}
+
+	@GetMapping("/doctors")
+	public ResponseEntity<List<String>> getAllDoctorNames() {
+		List<String> doctorNames = userService.getDoctorNames();
+		return ResponseEntity.ok(doctorNames);
+	}
 }
