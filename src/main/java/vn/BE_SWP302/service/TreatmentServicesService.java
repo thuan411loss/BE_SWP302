@@ -21,6 +21,7 @@ public class TreatmentServicesService {
 
 	public TreatmentServicesResponse create(TreatmentServicesRequest dto) {
 		TreatmentServices service = new TreatmentServices();
+		service.setName(dto.getName());
 		service.setCategory(dto.getCategory());
 		service.setTitle(dto.getTitle());
 		service.setDescription(dto.getDescription());
@@ -51,7 +52,7 @@ public class TreatmentServicesService {
 	public TreatmentServicesResponse update(Long id, TreatmentServicesRequest dto) {
 		TreatmentServices service = repository.findById(id)
 				.orElseThrow(() -> new RuntimeException("Service not found"));
-
+		service.setName(dto.getName());
 		service.setCategory(dto.getCategory());
 		service.setTitle(dto.getTitle());
 		service.setDescription(dto.getDescription());
@@ -77,6 +78,7 @@ public class TreatmentServicesService {
 	private TreatmentServicesResponse mapToResponse(TreatmentServices service) {
 		TreatmentServicesResponse response = new TreatmentServicesResponse();
 		response.setId(service.getService_id());
+		response.setName(service.getName());
 		response.setCategory(service.getCategory());
 		response.setTitle(service.getTitle());
 		response.setDescription(service.getDescription());

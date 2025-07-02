@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class TreatmentServicesRequest {
+    private String name;
     private String category;
     private String title;
     private String description;

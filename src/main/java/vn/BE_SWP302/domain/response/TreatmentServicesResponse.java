@@ -9,6 +9,7 @@ import lombok.Setter;
 @Getter
 public class TreatmentServicesResponse {
     private Long id;
+    private String name;
     private String category;
     private String title;
     private String description;
