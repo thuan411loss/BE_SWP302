@@ -54,7 +54,7 @@ public class WorkScheduleService {
 
 		return workScheduleRepository.findByDoctor(doctorOpt.get()).stream().map(ws -> {
 			WorkScheduleResponse res = new WorkScheduleResponse();
-			res.setScheduleId(ws.getScheduleId());
+			res.setWorkId(ws.getWorkId());
 			res.setUserId(ws.getDoctor().getId());
 			res.setDoctorName(ws.getDoctor().getName());
 			res.setStartTime(ws.getStartTime());

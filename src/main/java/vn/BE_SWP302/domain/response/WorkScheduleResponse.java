@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class WorkScheduleResponse {
-    private Long scheduleId;
+    private Long workId;
     private Long userId;
     private String doctorName;
     private LocalDateTime startTime;
