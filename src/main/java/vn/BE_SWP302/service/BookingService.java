@@ -13,6 +13,7 @@ import vn.BE_SWP302.domain.TreatmentServices;
 import vn.BE_SWP302.domain.User;
 import vn.BE_SWP302.domain.WorkSchedule;
 import vn.BE_SWP302.domain.response.BookingResponse;
+import vn.BE_SWP302.domain.response.PatientDTO;
 import vn.BE_SWP302.repository.BookingRepository;
 import vn.BE_SWP302.util.constant.BookingStatus;
 
@@ -137,5 +138,9 @@ public class BookingService {
 		if (booking.getService() != null)
 			res.setServiceName(booking.getService().getName());
 		return res;
+	}
+
+	public List<PatientDTO> getPatientsByDoctorId(Long doctorId) {
+		return bookingRepository.findPatientsByDoctorId(doctorId);
 	}
 }

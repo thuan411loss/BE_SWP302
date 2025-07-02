@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import vn.BE_SWP302.domain.Booking;
 import vn.BE_SWP302.domain.request.BookingRequest;
 import vn.BE_SWP302.domain.response.BookingResponse;
+import vn.BE_SWP302.domain.response.PatientDTO;
 import vn.BE_SWP302.domain.User;
 import vn.BE_SWP302.domain.TreatmentServices;
 import vn.BE_SWP302.service.BookingService;
@@ -105,5 +106,11 @@ public class BookingController {
 	public ResponseEntity<List<String>> getAllDoctorNames() {
 		List<String> doctorNames = userService.getDoctorNames();
 		return ResponseEntity.ok(doctorNames);
+	}
+
+	@GetMapping("/patients/{doctorId}")
+	public ResponseEntity<List<PatientDTO>> getPatientsByDoctorId(@PathVariable Long doctorId) {
+		List<PatientDTO> patients = bookingService.getPatientsByDoctorId(doctorId);
+		return ResponseEntity.ok(patients);
 	}
 }
