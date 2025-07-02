@@ -7,4 +7,5 @@ import vn.BE_SWP302.domain.TreatmentServices;
 
 @Repository
 public interface TreatmentServicesRepository extends JpaRepository<TreatmentServices, Long> {
+    TreatmentServices findByName(String name);
 }

@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import vn.BE_SWP302.domain.RestResponse;
+import vn.BE_SWP302.domain.request.RestResponse;
 
 @Component
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
