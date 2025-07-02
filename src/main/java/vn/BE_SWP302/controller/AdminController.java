@@ -5,12 +5,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import vn.BE_SWP302.domain.Account;
 import vn.BE_SWP302.domain.Role;
 import vn.BE_SWP302.domain.User;
 import vn.BE_SWP302.domain.request.ChangeRoleDTO;
 import vn.BE_SWP302.domain.request.CreateFirstAdminDTO;
 import vn.BE_SWP302.domain.response.ResCreateUserDTO;
+import vn.BE_SWP302.domain.response.UserAdminResponse;
 import vn.BE_SWP302.domain.response.ResAdminUserDTO;
+import vn.BE_SWP302.repository.AccountRepository;
 import vn.BE_SWP302.repository.RoleRepository;
 import vn.BE_SWP302.service.UserService;
 import vn.BE_SWP302.util.annotation.ApiMessage;
@@ -20,17 +24,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/admin")
+@RequiredArgsConstructor
 public class AdminController {
 
     private final UserService userService;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
-
-    public AdminController(UserService userService, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
-        this.userService = userService;
-        this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
+    private final AccountRepository accountRepository;
 
     // Tạo admin đầu tiên (chỉ dùng 1 lần)
     @PostMapping("/create-first-admin")
@@ -163,5 +163,21 @@ public class AdminController {
 
         ResAdminUserDTO res = userService.convertToResAdminUserDTO(user);
         return ResponseEntity.ok(res);
+    }
+
+    @GetMapping("/users")
+    @ApiMessage("Get all users")
+    public ResponseEntity<List<UserAdminResponse>> getAllUsers() {
+        List<UserAdminResponse> users = userService.getAllUsersForAdmin();
+        return ResponseEntity.ok(users);
+    }
+
+    @DeleteMapping("/users/{id}")
+    @ApiMessage("Delete user by ID")
+    public void deleteUserByAdmin(@PathVariable Long id) {
+        Account account = accountRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Account not found"));
+        account.setIsActive(false);
+        accountRepository.save(account);
     }
 }

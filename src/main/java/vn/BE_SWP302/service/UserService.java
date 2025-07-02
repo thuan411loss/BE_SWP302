@@ -12,6 +12,7 @@ import vn.BE_SWP302.domain.request.ResultPaginationDTO;
 import vn.BE_SWP302.domain.response.ResCreateUserDTO;
 import vn.BE_SWP302.domain.response.ResUpdateUserDTO;
 import vn.BE_SWP302.domain.response.ResUserDTO;
+import vn.BE_SWP302.domain.response.UserAdminResponse;
 import vn.BE_SWP302.domain.response.ResAdminUserDTO;
 import vn.BE_SWP302.repository.UserRepository;
 import vn.BE_SWP302.repository.RoleRepository;
@@ -111,11 +112,6 @@ public class UserService {
         User currentUser = this.fetchUserById(reqUser.getId());
         if (currentUser != null) {
             currentUser.setName(reqUser.getName());
-            currentUser.setEmail(reqUser.getEmail());
-            // Chỉ update password nếu FE truyền lên
-            if (reqUser.getPassword() != null && !reqUser.getPassword().isBlank()) {
-                currentUser.setPassword(reqUser.getPassword());
-            }
             currentUser.setPhone(reqUser.getPhone());
             currentUser.setAge(reqUser.getAge());
             currentUser.setGender(reqUser.getGender());
@@ -283,4 +279,16 @@ public class UserService {
     public User findByName(String name) {
         return userRepository.findByNameIgnoreCase(name);
     }
+
+    public List<UserAdminResponse> getAllUsersForAdmin() {
+        return userRepository.findAll().stream().map(user -> {
+            UserAdminResponse res = new UserAdminResponse();
+            res.setId(user.getId());
+            res.setName(user.getName());
+            res.setEmail(user.getEmail());
+            res.setRole(user.getRole() != null ? user.getRole().getRoleName() : "");
+            return res;
+        }).collect(Collectors.toList());
+    }
+
 }
