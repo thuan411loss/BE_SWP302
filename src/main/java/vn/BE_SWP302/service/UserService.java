@@ -133,7 +133,6 @@ public class UserService {
         return this.userRepository.existsByEmail(email);
     }
 
-
     public ResCreateUserDTO convertToResCreateUserDTO(User user) {
         ResCreateUserDTO res = new ResCreateUserDTO();
         res.setId(user.getId());
@@ -215,6 +214,14 @@ public class UserService {
         return userRepository.findAll().stream()
                 .filter(user -> user.getRole() != null &&
                         user.getRole().getRoleName().equalsIgnoreCase(roleName))
+                .collect(Collectors.toList());
+    }
+
+    public List<String> getDoctorNames() {
+        return userRepository.findAll().stream()
+                .filter(user -> user.getRole() != null &&
+                        user.getRole().getRoleName().equalsIgnoreCase("Doctor"))
+                .map(User::getName)
                 .collect(Collectors.toList());
     }
 
