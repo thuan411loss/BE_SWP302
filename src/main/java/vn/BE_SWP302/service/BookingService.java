@@ -1,6 +1,7 @@
 package vn.BE_SWP302.service;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,21 @@ public class BookingService {
 		if (customer.getRole() == null || !"Customer".equalsIgnoreCase(customer.getRole().getRoleName())) {
 			throw new RuntimeException("User is not a customer");
 		}
+
+		// Kiểm tra thời gian hợp lệ
+		LocalTime start = appointmentTime.toLocalTime();
+		LocalTime end = start.plusMinutes(30);
+
+		LocalTime workStart = LocalTime.of(7, 0);
+		LocalTime lunchStart = LocalTime.of(12, 0);
+		LocalTime lunchEnd = LocalTime.of(13, 0);
+		LocalTime workEnd = LocalTime.of(17, 30);
+
+		if ((start.isBefore(workStart) || end.isAfter(workEnd)) ||
+				(start.isBefore(lunchEnd) && end.isAfter(lunchStart))) {
+			throw new RuntimeException("Không được đặt lịch ngoài giờ làm việc hoặc trong giờ nghỉ trưa");
+		}
+
 		// Check if doctor is available at the requested time
 		if (!workScheduleService.isDoctorAvailable(doctor, appointmentTime)) {
 			throw new RuntimeException("Doctor is not available at the requested time");
