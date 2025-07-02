@@ -38,7 +38,7 @@ public class Invoice {
 	@Column(name = "issued_date")
 	private LocalDateTime issuedDate;
 
-	@Column(name = "total_amount", precision = 12, scale = 2)
+	@Column(name = "total_amount")
 	private Double totalAmount;
 
 	@Column(name = "status", length = 50)

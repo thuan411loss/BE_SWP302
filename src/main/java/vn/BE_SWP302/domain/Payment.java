@@ -1,6 +1,5 @@
 package vn.BE_SWP302.domain;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
@@ -33,8 +32,8 @@ public class Payment {
 	@JoinColumn(name = "invoice_id")
 	private Invoice invoice;
 
-	@Column(name = "amount", precision = 12, scale = 2)
-	private BigDecimal Amount;
+	@Column(name = "amount")
+	private Double amount;
 
 	@Column(name = "method", length = 50)
 	private String method;

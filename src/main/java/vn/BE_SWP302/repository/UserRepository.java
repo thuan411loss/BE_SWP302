@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
 
@@ -25,5 +27,8 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     User findByNameIgnoreCase(@Param("name") String name);
 
     long countByRole_RoleNameIgnoreCase(String roleName);
+
+    @Query("SELECT u FROM User u WHERE LOWER(u.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(u.email) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+    List<User> searchByKeyword(@Param("keyword") String keyword);
 
 }

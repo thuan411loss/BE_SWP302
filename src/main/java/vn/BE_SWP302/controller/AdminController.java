@@ -180,4 +180,12 @@ public class AdminController {
         account.setIsActive(false);
         accountRepository.save(account);
     }
+
+    @GetMapping("/users/search")
+    @ApiMessage("Search users by keyword")
+    public ResponseEntity<List<UserAdminResponse>> searchUsers(@RequestParam("q") String keyword) {
+        List<UserAdminResponse> users = userService.searchUsersForAdmin(keyword);
+        return ResponseEntity.ok(users);
+    }
+
 }

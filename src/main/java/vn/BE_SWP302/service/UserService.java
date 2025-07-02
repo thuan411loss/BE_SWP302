@@ -291,4 +291,16 @@ public class UserService {
         }).collect(Collectors.toList());
     }
 
+    public List<UserAdminResponse> searchUsersForAdmin(String keyword) {
+        List<User> users = userRepository.searchByKeyword(keyword);
+        return users.stream().map(user -> {
+            UserAdminResponse res = new UserAdminResponse();
+            res.setId(user.getId());
+            res.setName(user.getName());
+            res.setEmail(user.getEmail());
+            res.setRole(user.getRole() != null ? user.getRole().getRoleName() : "");
+            return res;
+        }).collect(Collectors.toList());
+    }
+
 }
