@@ -143,4 +143,8 @@ public class BookingService {
 	public List<PatientDTO> getPatientsByDoctorId(Long doctorId) {
 		return bookingRepository.findPatientsByDoctorId(doctorId);
 	}
+
+	public List<Booking> getBookingsByCustomerId(Long customerId) {
+		return bookingRepository.findByCustomer_Id(customerId);
+	}
 }

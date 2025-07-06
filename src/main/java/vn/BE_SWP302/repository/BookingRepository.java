@@ -32,4 +32,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, JpaSpec
 			+
 			"FROM Booking b WHERE b.work.doctor.id = :doctorId")
 	List<PatientDTO> findPatientsByDoctorId(@Param("doctorId") Long doctorId);
+
+	List<Booking> findByCustomer_Id(Long customerId);
 }

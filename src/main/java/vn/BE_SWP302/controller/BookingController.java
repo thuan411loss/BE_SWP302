@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.LocalDateTime;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.RequiredArgsConstructor;
 import vn.BE_SWP302.domain.Booking;
 import vn.BE_SWP302.domain.request.BookingRequest;
 import vn.BE_SWP302.domain.response.BookingResponse;
@@ -32,15 +32,11 @@ import vn.BE_SWP302.util.error.IdinvaliadException;
 
 @RestController
 @RequestMapping("/api/bookings")
+@RequiredArgsConstructor
 public class BookingController {
 
-	@Autowired
 	BookingService bookingService;
-
-	@Autowired
 	UserService userService;
-
-	@Autowired
 	TreatmentServicesService treatmentServicesService;
 
 	@GetMapping
@@ -120,5 +116,15 @@ public class BookingController {
 	public ResponseEntity<List<PatientDTO>> getPatientsByDoctorId(@PathVariable Long doctorId) {
 		List<PatientDTO> patients = bookingService.getPatientsByDoctorId(doctorId);
 		return ResponseEntity.ok(patients);
+	}
+
+	@GetMapping("/customer/{customerId}")
+	@ApiMessage("Get bookings by customer ID")
+	public ResponseEntity<List<BookingResponse>> getBookingsByCustomerId(@PathVariable Long customerId) {
+		List<BookingResponse> bookings = bookingService.getBookingsByCustomerId(customerId)
+				.stream()
+				.map(bookingService::toResponse)
+				.toList();
+		return ResponseEntity.ok(bookings);
 	}
 }
