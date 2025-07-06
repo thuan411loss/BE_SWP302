@@ -27,6 +27,7 @@ import vn.BE_SWP302.service.UserService;
 import vn.BE_SWP302.service.TreatmentServicesService;
 import vn.BE_SWP302.domain.request.BookingFormRequest;
 import vn.BE_SWP302.util.SecurityUtil;
+import vn.BE_SWP302.util.annotation.ApiMessage;
 import vn.BE_SWP302.util.error.IdinvaliadException;
 
 @RestController
@@ -43,18 +44,21 @@ public class BookingController {
 	TreatmentServicesService treatmentServicesService;
 
 	@GetMapping
+	@ApiMessage("Get all bookings")
 	public ResponseEntity<List<BookingResponse>> getAll() {
 		List<BookingResponse> responses = bookingService.findAll().stream().map(bookingService::toResponse).toList();
 		return ResponseEntity.ok(responses);
 	}
 
 	@GetMapping("/{id}")
+	@ApiMessage("Get booking by ID")
 	public ResponseEntity<BookingResponse> get(@PathVariable Long id) {
 		Booking booking = bookingService.findById(id);
 		return ResponseEntity.ok(bookingService.toResponse(booking));
 	}
 
 	@PostMapping
+	@ApiMessage("Create a new booking")
 	public ResponseEntity<BookingResponse> create(@RequestBody BookingRequest request) {
 		// Lấy customer, doctor, service từ id
 		User customer = userService.findById(request.getCustomerId());
@@ -91,24 +95,28 @@ public class BookingController {
 	}
 
 	@PutMapping("/{id}")
+	@ApiMessage("Update a booking")
 	public Booking update(@PathVariable Long id, @RequestBody Booking booking) {
 		booking.setBookingId(id);
 		return bookingService.save(booking);
 	}
 
 	@DeleteMapping("/{id}")
+	@ApiMessage("Delete a booking")
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		bookingService.delete(id);
 		return ResponseEntity.noContent().build();
 	}
 
 	@GetMapping("/doctors")
+	@ApiMessage("Get all doctor names")
 	public ResponseEntity<List<String>> getAllDoctorNames() {
 		List<String> doctorNames = userService.getDoctorNames();
 		return ResponseEntity.ok(doctorNames);
 	}
 
 	@GetMapping("/patients/{doctorId}")
+	@ApiMessage("Get all patients by doctor ID")
 	public ResponseEntity<List<PatientDTO>> getPatientsByDoctorId(@PathVariable Long doctorId) {
 		List<PatientDTO> patients = bookingService.getPatientsByDoctorId(doctorId);
 		return ResponseEntity.ok(patients);
