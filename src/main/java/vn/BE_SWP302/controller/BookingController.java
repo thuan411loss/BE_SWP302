@@ -35,9 +35,9 @@ import vn.BE_SWP302.util.error.IdinvaliadException;
 @RequiredArgsConstructor
 public class BookingController {
 
-	BookingService bookingService;
-	UserService userService;
-	TreatmentServicesService treatmentServicesService;
+	private final BookingService bookingService;
+	private final UserService userService;
+	private final TreatmentServicesService treatmentServicesService;
 
 	@GetMapping
 	@ApiMessage("Get all bookings")
