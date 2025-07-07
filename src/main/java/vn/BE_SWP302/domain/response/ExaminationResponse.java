@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Getter
 public class ExaminationResponse {
     private Long examId;
+    private String name;
     private Long bookingId;
     private LocalDateTime examDate;
     private String diagnosis;

@@ -80,6 +80,7 @@ public class ExaminationService {
 	private ExaminationResponse toResponse(Examination e) {
 		ExaminationResponse res = new ExaminationResponse();
 		res.setExamId(e.getExamId());
+		res.setName(e.getName());
 		res.setExamDate(e.getExamDate());
 		res.setDiagnosis(e.getDiagnosis());
 		res.setRecommendation(e.getRecommendation());

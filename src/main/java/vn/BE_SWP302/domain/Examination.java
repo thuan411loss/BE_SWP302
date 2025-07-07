@@ -27,6 +27,9 @@ public class Examination {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long examId;
 
+	@Column(name = "name")
+	private String name;
+
 	@ManyToOne
 	@JoinColumn(name = "booking_id", nullable = false)
 	private Booking booking;
