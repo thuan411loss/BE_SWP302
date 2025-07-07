@@ -113,7 +113,7 @@ public class BookingController {
 
 	@GetMapping("/patients/{doctorId}")
 	@ApiMessage("Get all patients by doctor ID")
-	public ResponseEntity<List<PatientDTO>> getPatientsByDoctorId(@PathVariable Long doctorId) {
+	public ResponseEntity<List<PatientDTO>> getPatientsByDoctorId(@PathVariable("doctorId") Long doctorId) {
 		List<PatientDTO> patients = bookingService.getPatientsByDoctorId(doctorId);
 		return ResponseEntity.ok(patients);
 	}
