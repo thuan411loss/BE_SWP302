@@ -12,5 +12,6 @@ public class MedicalResultResponse {
     private String testName;
     private String resultValue;
     private LocalDate resultDate;
-
+    private String doctorName;
+    private String conclusion;
 }

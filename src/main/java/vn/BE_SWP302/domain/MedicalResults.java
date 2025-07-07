@@ -44,7 +44,8 @@ public class MedicalResults {
 	@Column(name = "result_date")
 	private LocalDate resultDate;
 
-
+	@Column(name = "conclusion", columnDefinition = "TEXT")
+	private String conclusion;
 
 	@OneToMany(mappedBy = "medicalResult", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<TreatmentSchedules> treatmentSchedules;

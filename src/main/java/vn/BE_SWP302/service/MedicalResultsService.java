@@ -9,13 +9,11 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import vn.BE_SWP302.domain.Examination;
 import vn.BE_SWP302.domain.MedicalResults;
-import vn.BE_SWP302.domain.User;
 import vn.BE_SWP302.domain.request.MedicalResultsRequest;
 import vn.BE_SWP302.domain.response.ApiResponse;
 import vn.BE_SWP302.domain.response.MedicalResultResponse;
 import vn.BE_SWP302.repository.ExaminationRepository;
 import vn.BE_SWP302.repository.MedicalResultsRepository;
-import vn.BE_SWP302.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +22,6 @@ public class MedicalResultsService {
 
 	private final MedicalResultsRepository medicalResultsRepository;
 	private final ExaminationRepository examinationRepository;
-	private final UserRepository userRepository;
 
 	public ApiResponse createMedicalResults(MedicalResultsRequest request) {
 		Optional<Examination> examination = examinationRepository.findById(request.getExamId());
@@ -69,5 +66,36 @@ public class MedicalResultsService {
 
 	public List<MedicalResults> getResultsByExamId(Long examId) {
 		return medicalResultsRepository.findByExamination_ExamId(examId);
+	}
+
+	public List<MedicalResultResponse> getByCustomerId(Long customerId) {
+		// Truy vấn custom ở repository hoặc lọc qua Examination → Booking → Customer
+		// Giả sử bạn đã có method findByCustomerId ở repository:
+		return medicalResultsRepository.findByCustomerId(customerId)
+				.stream()
+				.map(this::toResponse)
+				.collect(Collectors.toList());
+	}
+
+	public MedicalResultResponse getById(Long resultId) {
+		MedicalResults r = medicalResultsRepository.findById(resultId)
+				.orElseThrow(() -> new RuntimeException("Medical result not found"));
+		return toResponse(r);
+	}
+
+	private MedicalResultResponse toResponse(MedicalResults r) {
+		MedicalResultResponse dto = new MedicalResultResponse();
+		dto.setResultId(r.getResultId());
+		dto.setTestName(r.getTestName());
+		dto.setResultValue(r.getResultValue());
+		dto.setResultDate(r.getResultDate());
+		dto.setConclusion(r.getConclusion());
+		// Lấy tên bác sĩ từ Examination → Booking → WorkSchedule → Doctor
+		if (r.getExamination() != null && r.getExamination().getBooking() != null
+				&& r.getExamination().getBooking().getWork() != null
+				&& r.getExamination().getBooking().getWork().getDoctor() != null) {
+			dto.setDoctorName(r.getExamination().getBooking().getWork().getDoctor().getName());
+		}
+		return dto;
 	}
 }
