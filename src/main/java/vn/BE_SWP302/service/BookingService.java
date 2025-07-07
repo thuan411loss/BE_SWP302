@@ -145,6 +145,6 @@ public class BookingService {
 	}
 
 	public List<Booking> getBookingsByCustomerId(Long customerId) {
-		return bookingRepository.findByCustomer_Id(customerId);
+		return bookingRepository.findByCustomerId(customerId);
 	}
 }
