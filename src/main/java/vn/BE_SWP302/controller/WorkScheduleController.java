@@ -27,7 +27,7 @@ public class WorkScheduleController {
     }
 
     @GetMapping("/doctor/{doctorId}")
-    public ResponseEntity<List<WorkScheduleResponse>> getByDoctor(@PathVariable Long doctorId) {
+    public ResponseEntity<List<WorkScheduleResponse>> getByDoctor(@PathVariable("doctorId") Long doctorId) {
         return ResponseEntity.ok(workScheduleService.getByDoctor(doctorId));
     }
 }
