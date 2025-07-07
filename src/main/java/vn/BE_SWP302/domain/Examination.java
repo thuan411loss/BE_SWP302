@@ -40,4 +40,7 @@ public class Examination {
 	@Column(columnDefinition = "TEXT")
 	private String recommendation;
 
+	@Column(name = "normal_range", length = 100)
+	private String normalRange;
+
 }

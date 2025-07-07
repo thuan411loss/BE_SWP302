@@ -19,4 +19,6 @@ public class ExaminationRequest {
     private String diagnosis;
 
     private String recommendation;
+
+    private String normalRange;
 }

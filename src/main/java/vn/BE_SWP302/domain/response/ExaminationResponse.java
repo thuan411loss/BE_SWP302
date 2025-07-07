@@ -14,6 +14,8 @@ public class ExaminationResponse {
     private String diagnosis;
     private String recommendation;
 
+    private String normalRange;
+
     // Thông tin booking (nếu cần)
     private String customerName;
     private String doctorName;

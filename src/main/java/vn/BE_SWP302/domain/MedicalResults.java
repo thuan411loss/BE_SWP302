@@ -47,6 +47,9 @@ public class MedicalResults {
 	@Column(name = "conclusion", columnDefinition = "TEXT")
 	private String conclusion;
 
+	@Column(name = "normal_range", length = 100)
+	private String normalRange;
+
 	@OneToMany(mappedBy = "medicalResult", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<TreatmentSchedules> treatmentSchedules;
 
