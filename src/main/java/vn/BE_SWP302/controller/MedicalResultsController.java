@@ -11,12 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import vn.BE_SWP302.domain.MedicalResults;
 import vn.BE_SWP302.domain.request.MedicalResultsRequest;
 import vn.BE_SWP302.domain.response.ApiResponse;
 import vn.BE_SWP302.domain.response.MedicalResultResponse;
 import vn.BE_SWP302.service.MedicalResultsService;
-import vn.BE_SWP302.domain.response.ApiMessage;
+import vn.BE_SWP302.util.annotation.ApiMessage;
 
 @RestController
 @RequestMapping("/api/results")
