@@ -120,7 +120,7 @@ public class BookingController {
 
 	@GetMapping("/customer/{customerId}")
 	@ApiMessage("Get bookings by customer ID")
-	public ResponseEntity<List<BookingResponse>> getBookingsByCustomerId(@PathVariable Long customerId) {
+	public ResponseEntity<List<BookingResponse>> getBookingsByCustomerId(@PathVariable("customerId") Long customerId) {
 		List<BookingResponse> bookings = bookingService.getBookingsByCustomerId(customerId)
 				.stream()
 				.map(bookingService::toResponse)
