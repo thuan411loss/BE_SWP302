@@ -13,6 +13,6 @@ import vn.BE_SWP302.domain.Examination;
 public interface ExaminationRepository extends JpaRepository<Examination, Long> {
     List<Examination> findByBooking_BookingId(Long bookingId);
 
-    @Query("SELECT e FROM Examination e WHERE e.booking.customer.customerId = :customerId")
+    @Query("SELECT e FROM Examination e WHERE e.booking.customer.id = :customerId")
     List<Examination> findByCustomerId(@Param("customerId") Long customerId);
 }
