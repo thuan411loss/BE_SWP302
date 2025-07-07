@@ -77,6 +77,13 @@ public class TreatmentProgressService {
 		return new ApiResponse(true, "Progress deleted successfully");
 	}
 
+	public List<TreatmentProgressResponse> getByCustomerId(Long customerId) {
+		return treatmentProgressRepository.findByCustomerId(customerId)
+				.stream()
+				.map(this::mapToResponse)
+				.toList();
+	}
+
 	private TreatmentProgressResponse mapToResponse(TreatmentProgress progress) {
 		TreatmentProgressResponse res = new TreatmentProgressResponse();
 		res.setProgressId(progress.getProgressId());

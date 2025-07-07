@@ -36,6 +36,11 @@ public class TreatmentProgressController {
         return ResponseEntity.ok(treatmentProgressService.getBySchedule(scheduleId));
     }
 
+    @GetMapping("/customer/{customerId}")
+    public ResponseEntity<List<TreatmentProgressResponse>> getByCustomerId(@PathVariable Long customerId) {
+        return ResponseEntity.ok(treatmentProgressService.getByCustomerId(customerId));
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse> update(@PathVariable Long id, @RequestBody TreatmentProgressRequest request) {
         return ResponseEntity.ok(treatmentProgressService.update(id, request));
