@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "prescription")
@@ -43,5 +44,14 @@ public class Prescription {
 
 	@Column(name = "instruction", columnDefinition = "TEXT")
 	private String Instruction;
+
+	@Column(name = "prescribed_date")
+	private LocalDate prescribedDate;
+
+	@Column(name = "frequency", length = 100)
+	private String frequency;
+
+	@Column(name = "duration", length = 100)
+	private String duration;
 
 }

@@ -10,4 +10,7 @@ public class PrescriptionRequest {
     private String medicineName;
     private String dosage;
     private String instructions;
+    private LocalDate prescribedDate; // Ngày kê đơn
+    private String frequency; // Tần suất
+    private String duration; // Thời gian
 }

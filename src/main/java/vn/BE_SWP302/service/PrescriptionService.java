@@ -50,4 +50,56 @@ public class PrescriptionService {
         response.setInstructions(prescription.getInstruction());
         return response;
     }
+
+    public PrescriptionResponse getPrescriptionById(Long id) {
+        Prescription prescription = prescriptionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Prescription not found"));
+        return toResponse(prescription);
+    }
+
+    public ApiResponse updatePrescription(Long id, PrescriptionRequest request) {
+        Prescription prescription = prescriptionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Prescription not found"));
+        prescription.setMedicineName(request.getMedicineName());
+        prescription.setDosage(request.getDosage());
+        prescription.setInstruction(request.getInstructions());
+        // Nếu có các trường mới như prescribedDate, frequency, duration thì set thêm ở
+        // đây
+        prescriptionRepository.save(prescription);
+        return new ApiResponse(true, "Prescription updated successfully");
+    }
+
+    public ApiResponse deletePrescription(Long id) {
+        if (!prescriptionRepository.existsById(id)) {
+            return new ApiResponse(false, "Prescription not found");
+        }
+        prescriptionRepository.deleteById(id);
+        return new ApiResponse(true, "Prescription deleted successfully");
+    }
+
+    public List<PrescriptionResponse> getAllPrescriptions() {
+        return prescriptionRepository.findAll().stream()
+                .map(this::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    public List<PrescriptionResponse> getPrescriptionsByCustomerId(Long customerId) {
+        // Lấy tất cả TreatmentRecord của customer này
+        List<TreatmentRecord> records = treatmentRecordRepository.findAll().stream()
+                .filter(r -> r.getBooking() != null && r.getBooking().getCustomer() != null &&
+                        r.getBooking().getCustomer().getId().equals(customerId))
+                .toList();
+        // Lấy tất cả Prescription thuộc các record này
+        return records.stream()
+                .flatMap(r -> r.getPrescriptions().stream())
+                .map(this::toResponse)
+                .toList();
+    }
+
+    public List<PrescriptionResponse> getPrescriptionsByResultId(Long resultId) {
+        return prescriptionRepository.findByMedicalResult_ResultId(resultId)
+                .stream()
+                .map(this::toResponse)
+                .collect(Collectors.toList());
+    }
 }
