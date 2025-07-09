@@ -16,6 +16,8 @@ import vn.BE_SWP302.domain.response.ExaminationResponse;
 import vn.BE_SWP302.repository.BookingRepository;
 import vn.BE_SWP302.repository.ExaminationRepository;
 import vn.BE_SWP302.repository.MedicalResultsRepository;
+import vn.BE_SWP302.repository.TestReferenceRangeRepository;
+import vn.BE_SWP302.domain.TestReferenceRange;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +26,7 @@ public class ExaminationService {
 	private final ExaminationRepository examinationRepository;
 	private final BookingRepository bookingRepository;
 	private final MedicalResultsRepository medicalResultsRepository;
+	private final TestReferenceRangeRepository testReferenceRangeRepository;
 
 	public ApiResponse createExamination(ExaminationRequest request) {
 		Optional<Booking> booking = bookingRepository.findById(request.getBookingId());
@@ -36,7 +39,13 @@ public class ExaminationService {
 		exam.setExamDate(LocalDateTime.now());
 		exam.setDiagnosis(request.getDiagnosis());
 		exam.setRecommendation(request.getRecommendation());
-		exam.setNormalRange(request.getNormalRange());
+
+		// Tự động lấy normalRange theo tên xét nghiệm
+		String normalRange = testReferenceRangeRepository.findByTestName(request.getName())
+				.map(TestReferenceRange::getNormalRange)
+				.orElse(null);
+		exam.setNormalRange(normalRange);
+
 		examinationRepository.save(exam);
 		return new ApiResponse(true, "Examination created successfully");
 	}
