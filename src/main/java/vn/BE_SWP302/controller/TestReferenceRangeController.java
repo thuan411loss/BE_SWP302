@@ -21,4 +21,10 @@ public class TestReferenceRangeController {
                 .map(ref -> ResponseEntity.ok(ref.getNormalRange()))
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<?> getAll() {
+        return ResponseEntity.ok(repo.findAll());
+    }
+
 }
