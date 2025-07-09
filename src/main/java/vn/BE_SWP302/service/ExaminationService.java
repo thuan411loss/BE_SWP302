@@ -106,9 +106,8 @@ public class ExaminationService {
 				res.setServiceName(e.getBooking().getService().getName());
 		}
 
-		// Lấy normalRange từ medical results
-		medicalResultsRepository.findByExamination_ExamId(e.getExamId()).stream().findFirst()
-				.ifPresent(mr -> res.setNormalRange(mr.getNormalRange()));
+		// Lấy normalRange từ chính Examination
+		res.setNormalRange(e.getNormalRange());
 
 		return res;
 	}
