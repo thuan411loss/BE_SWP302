@@ -16,7 +16,7 @@ public class TestReferenceRangeController {
     private final TestReferenceRangeRepository repo;
 
     @GetMapping("/{testName}")
-    public ResponseEntity<String> getNormalRange(@PathVariable String testName) {
+    public ResponseEntity<String> getNormalRange(@PathVariable("testName") String testName) {
         return repo.findByTestName(testName)
                 .map(ref -> ResponseEntity.ok(ref.getNormalRange()))
                 .orElse(ResponseEntity.notFound().build());
