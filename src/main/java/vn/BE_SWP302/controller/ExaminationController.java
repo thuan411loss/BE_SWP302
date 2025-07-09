@@ -54,13 +54,15 @@ public class ExaminationController {
 
     @GetMapping("/booking/{bookingId}")
     @ApiMessage("Get examination by booking ID")
-    public ResponseEntity<List<ExaminationResponse>> getExaminationsByBooking(@PathVariable Long bookingId) {
+    public ResponseEntity<List<ExaminationResponse>> getExaminationsByBooking(
+            @PathVariable("bookingId") Long bookingId) {
         return ResponseEntity.ok(examinationService.findByBookingId(bookingId));
     }
 
     @GetMapping("/customer/{customerId}")
     @ApiMessage("Get examinations by customer ID")
-    public ResponseEntity<List<ExaminationResponse>> getExaminationsByCustomer(@PathVariable Long customerId) {
+    public ResponseEntity<List<ExaminationResponse>> getExaminationsByCustomer(
+            @PathVariable("customerId") Long customerId) {
         return ResponseEntity.ok(examinationService.findByCustomerId(customerId));
     }
 
