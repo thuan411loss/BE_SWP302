@@ -13,6 +13,8 @@ public class ExaminationRequest {
     @NotNull(message = "Booking ID không được để trống")
     private Long bookingId;
 
+    private String name;
+
     private LocalDateTime examDate;
 
     @NotBlank(message = "Chẩn đoán không được để trống")

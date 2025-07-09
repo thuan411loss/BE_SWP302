@@ -32,9 +32,11 @@ public class ExaminationService {
 		}
 		Examination exam = new Examination();
 		exam.setBooking(booking.get());
+		exam.setName(request.getName());
 		exam.setExamDate(LocalDateTime.now());
 		exam.setDiagnosis(request.getDiagnosis());
 		exam.setRecommendation(request.getRecommendation());
+		exam.setNormalRange(request.getNormalRange());
 		examinationRepository.save(exam);
 		return new ApiResponse(true, "Examination created successfully");
 	}
