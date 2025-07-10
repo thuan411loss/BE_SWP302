@@ -3,12 +3,16 @@ package vn.BE_SWP302.domain.request;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.util.List;
+
 @Setter
 @Getter
 public class TreatmentScheduleRequest {
     private Long resultId;
-    private String startDate;
-    private String endDate;
+    private String stageName;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private String status;
-    private String notes;
+    private List<String> activities;
 }

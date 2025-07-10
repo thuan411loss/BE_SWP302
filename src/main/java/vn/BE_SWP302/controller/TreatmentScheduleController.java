@@ -19,34 +19,30 @@ import vn.BE_SWP302.domain.response.TreatmentScheduleResponse;
 import vn.BE_SWP302.service.TreatmentSchedulesService;
 
 @RestController
-@RequestMapping("/api/schedules")
+@RequestMapping("/api/treatment-schedules")
 @RequiredArgsConstructor
-class TreatmentScheduleController {
+public class TreatmentScheduleController {
 
     private final TreatmentSchedulesService treatmentSchedulesService;
 
     @PostMapping("/create")
-    public ResponseEntity<ApiResponse> createSchedule(@RequestBody TreatmentScheduleRequest request) {
+    public ResponseEntity<TreatmentScheduleResponse> create(@RequestBody TreatmentScheduleRequest request) {
         return ResponseEntity.ok(treatmentSchedulesService.createSchedule(request));
     }
 
-    @GetMapping
-    public ResponseEntity<List<TreatmentScheduleResponse>> getAll() {
-        return ResponseEntity.ok(treatmentSchedulesService.getAll());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<TreatmentScheduleResponse> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(treatmentSchedulesService.getById(id));
+    @GetMapping("/result/{resultId}")
+    public ResponseEntity<List<TreatmentScheduleResponse>> getByResult(@PathVariable Long resultId) {
+        return ResponseEntity.ok(treatmentSchedulesService.getSchedulesByResultId(resultId));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse> update(@PathVariable Long id, @RequestBody TreatmentScheduleRequest request) {
-        return ResponseEntity.ok(treatmentSchedulesService.update(id, request));
+    public ResponseEntity<TreatmentScheduleResponse> update(@PathVariable Long id, @RequestBody TreatmentScheduleRequest request) {
+        return ResponseEntity.ok(treatmentSchedulesService.updateSchedule(id, request));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse> delete(@PathVariable Long id) {
-        return ResponseEntity.ok(treatmentSchedulesService.delete(id));
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        treatmentSchedulesService.deleteSchedule(id);
+        return ResponseEntity.noContent().build();
     }
 }
