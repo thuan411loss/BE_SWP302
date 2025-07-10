@@ -2,8 +2,6 @@ package vn.BE_SWP302.service;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import java.time.LocalDate;
 import java.util.stream.Collectors;
 
 import jakarta.transaction.Transactional;
@@ -13,8 +11,6 @@ import lombok.RequiredArgsConstructor;
 import vn.BE_SWP302.domain.MedicalResults;
 import vn.BE_SWP302.domain.TreatmentSchedules;
 import vn.BE_SWP302.domain.request.TreatmentScheduleRequest;
-import vn.BE_SWP302.domain.response.ApiResponse;
-import vn.BE_SWP302.domain.response.ExaminationResponse;
 import vn.BE_SWP302.domain.response.TreatmentScheduleResponse;
 import vn.BE_SWP302.repository.MedicalResultsRepository;
 import vn.BE_SWP302.repository.TreatmentSchedulesRepository;
@@ -63,7 +59,7 @@ public class TreatmentSchedulesService {
 		return toResponse(treatmentSchedulesRepository.save(schedule));
 	}
 	public List<TreatmentScheduleResponse> getSchedulesByCustomerIdFromBooking(Long customerId) {
-		return treatmentSchedulesRepository.findByMedicalResult_Booking_CustomerId(customerId)
+		return treatmentSchedulesRepository.findByMedicalResult_Examination_Booking_CustomerId(customerId)
 				.stream()
 				.map(this::toResponse)
 				.collect(Collectors.toList());

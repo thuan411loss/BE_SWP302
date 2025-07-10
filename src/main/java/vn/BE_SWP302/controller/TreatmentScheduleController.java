@@ -3,7 +3,6 @@ package vn.BE_SWP302.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,11 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import vn.BE_SWP302.domain.request.TreatmentScheduleRequest;
-import vn.BE_SWP302.domain.response.ApiResponse;
-import vn.BE_SWP302.domain.response.ExaminationResponse;
 import vn.BE_SWP302.domain.response.TreatmentScheduleResponse;
 import vn.BE_SWP302.service.TreatmentSchedulesService;
-import vn.BE_SWP302.service.UserDetailsCustom;
 import vn.BE_SWP302.util.annotation.ApiMessage;
 
 @RestController
