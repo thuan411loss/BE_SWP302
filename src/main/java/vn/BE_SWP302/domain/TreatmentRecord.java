@@ -30,7 +30,7 @@ public class TreatmentRecord {
 
     private LocalDateTime createdDate;
     @ManyToOne
-    @JoinColumn(name = "result_id")
+    @JoinColumn(name = "medical_result_id")
     private MedicalResults medicalResult;
 
     @OneToMany(mappedBy = "treatmentRecord", cascade = CascadeType.ALL)
