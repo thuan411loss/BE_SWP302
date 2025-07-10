@@ -1,10 +1,8 @@
 package vn.BE_SWP302.domain;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.time.LocalDateTime;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -12,7 +10,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,35 +25,21 @@ import lombok.Setter;
 public class MedicalResults {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "result_id")
-	private Long resultId;
+	private Long resultId; // Tự sinh
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "exam_id", nullable = false)
-	private Examination examination;
+	private Examination examination; // Liên kết với Examination
 
-	@Column(name = "test_name", length = 100)
-	private String testName;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "doctor_id")
+	private User doctor; // Người nhập kết quả (bác sĩ đang đăng nhập)
 
-	@Column(name = "result_value")
-	private String resultValue;
+	private String testName; // Lấy từ examination.name
+	private LocalDateTime examDate; // Lấy từ examination.examDate
 
-	@Column(name = "result_date")
-	private LocalDate resultDate;
-
-	@Column(name = "conclusion", columnDefinition = "TEXT")
-	private String conclusion;
-
-	@Column(name = "normal_range", length = 100)
-	private String normalRange;
-
-	@OneToMany(mappedBy = "medicalResult", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<TreatmentSchedules> treatmentSchedules;
-
-	@OneToMany(mappedBy = "medicalResult", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<Prescription> prescriptions;
-
-	@OneToMany(mappedBy = "medicalResult", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<TreatmentRecord> treatmentRecords;
+	private LocalDate resultDate; // Người dùng chọn
+	private String resultValue; // Nhập từ form
+	private String conclusion; // Nhập từ form
 
 }

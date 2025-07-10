@@ -9,11 +9,14 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import vn.BE_SWP302.domain.Examination;
 import vn.BE_SWP302.domain.MedicalResults;
+import vn.BE_SWP302.domain.User;
 import vn.BE_SWP302.domain.request.MedicalResultsRequest;
 import vn.BE_SWP302.domain.response.ApiResponse;
 import vn.BE_SWP302.domain.response.MedicalResultResponse;
 import vn.BE_SWP302.repository.ExaminationRepository;
 import vn.BE_SWP302.repository.MedicalResultsRepository;
+import vn.BE_SWP302.repository.UserRepository;
+import vn.BE_SWP302.util.SecurityUtil;
 
 @Service
 @RequiredArgsConstructor
@@ -22,34 +25,38 @@ public class MedicalResultsService {
 
 	private final MedicalResultsRepository medicalResultsRepository;
 	private final ExaminationRepository examinationRepository;
+	private final UserRepository userRepository;
 
 	public ApiResponse createMedicalResults(MedicalResultsRequest request) {
-		Optional<Examination> examination = examinationRepository.findById(request.getExamId());
-		if (examination.isEmpty()) {
+		Optional<Examination> examOpt = examinationRepository.findById(request.getExamId());
+		if (examOpt.isEmpty()) {
 			return new ApiResponse(false, "Examination not found");
 		}
+		Examination exam = examOpt.get();
 
-		MedicalResults results = new MedicalResults();
-		results.setExamination(examination.get());
-		results.setTestName(request.getTestName());
-		results.setResultValue(request.getResultValue());
-		results.setResultDate(request.getResultDate());
-		medicalResultsRepository.save(results);
-		return new ApiResponse(true, "Medical results created successfully");
+		MedicalResults result = new MedicalResults();
+		result.setExamination(exam);
+
+		String username = SecurityUtil.getCurrentUserLogin().orElse(null);
+		User doctor = userRepository.findByEmail(username);
+		result.setDoctor(doctor);
+		// Lấy testName, examDate từ Examination
+		result.setTestName(exam.getName());
+		result.setExamDate(exam.getExamDate());
+
+		result.setResultValue(request.getResultValue());
+		result.setResultDate(request.getResultDate());
+		result.setConclusion(request.getConclusion());
+
+		medicalResultsRepository.save(result);
+		return new ApiResponse(true, "Medical result created successfully");
 	}
 
 	public List<MedicalResultResponse> getByExam(Long examId) {
 		return medicalResultsRepository.findByExamination_ExamId(examId)
 				.stream()
-				.map(r -> {
-					MedicalResultResponse dto = new MedicalResultResponse();
-					dto.setResultId(r.getResultId());
-					dto.setTestName(r.getTestName());
-					dto.setResultValue(r.getResultValue());
-					dto.setResultDate(r.getResultDate());
-					// dto.setStaffName(r.getStaff().getFullName()); liên quan đến bảng user
-					return dto;
-				}).collect(Collectors.toList());
+				.map(this::toResponse)
+				.collect(Collectors.toList());
 	}
 
 	public MedicalResults findById(Long id) {
@@ -69,8 +76,6 @@ public class MedicalResultsService {
 	}
 
 	public List<MedicalResultResponse> getByCustomerId(Long customerId) {
-		// Truy vấn custom ở repository hoặc lọc qua Examination → Booking → Customer
-		// Giả sử bạn đã có method findByCustomerId ở repository:
 		return medicalResultsRepository.findByCustomerId(customerId)
 				.stream()
 				.map(this::toResponse)
@@ -87,15 +92,11 @@ public class MedicalResultsService {
 		MedicalResultResponse dto = new MedicalResultResponse();
 		dto.setResultId(r.getResultId());
 		dto.setTestName(r.getTestName());
+		dto.setExamDate(r.getExamDate());
 		dto.setResultValue(r.getResultValue());
 		dto.setResultDate(r.getResultDate());
 		dto.setConclusion(r.getConclusion());
-		// Lấy tên bác sĩ từ Examination → Booking → WorkSchedule → Doctor
-		if (r.getExamination() != null && r.getExamination().getBooking() != null
-				&& r.getExamination().getBooking().getWork() != null
-				&& r.getExamination().getBooking().getWork().getDoctor() != null) {
-			dto.setDoctorName(r.getExamination().getBooking().getWork().getDoctor().getName());
-		}
+		dto.setDoctorName(r.getDoctor() != null ? r.getDoctor().getName() : null);
 		return dto;
 	}
 }

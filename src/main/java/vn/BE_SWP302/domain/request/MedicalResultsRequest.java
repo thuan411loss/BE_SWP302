@@ -9,7 +9,6 @@ import lombok.Setter;
 @Getter
 public class MedicalResultsRequest {
     private Long examId;
-    private String testName;
     private String resultValue;
     private LocalDate resultDate;
     private String conclusion;
