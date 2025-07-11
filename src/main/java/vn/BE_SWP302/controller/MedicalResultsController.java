@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,5 +48,12 @@ public class MedicalResultsController {
     @ApiMessage("Get medical result by ID")
     public ResponseEntity<MedicalResultResponse> getById(@PathVariable Long resultId) {
         return ResponseEntity.ok(medicalResultsService.getById(resultId));
+    }
+
+    @PutMapping("/update/{id}")
+    @ApiMessage("Update medical result")
+    public ResponseEntity<ApiResponse> updateMedicalResults(@PathVariable("id") Long id,
+            @RequestBody MedicalResultsRequest request) {
+        return ResponseEntity.ok(medicalResultsService.updateMedicalResults(id, request));
     }
 }
