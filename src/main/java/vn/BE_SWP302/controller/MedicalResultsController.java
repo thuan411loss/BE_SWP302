@@ -33,7 +33,7 @@ public class MedicalResultsController {
 
     @GetMapping("/exam/{examId}")
     @ApiMessage("Get medical results by exam ID")
-    public ResponseEntity<List<MedicalResultResponse>> getByExam(@PathVariable Long examId) {
+    public ResponseEntity<List<MedicalResultResponse>> getByExam(@PathVariable("examId") Long examId) {
         return ResponseEntity.ok(medicalResultsService.getByExam(examId));
     }
 
