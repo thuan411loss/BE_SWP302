@@ -29,7 +29,7 @@ class InvoiceController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<InvoiceResponse>> getByUser(@PathVariable Long userId) {
+    public ResponseEntity<List<InvoiceResponse>> getByUser(@PathVariable("userId") Long userId) {
         return ResponseEntity.ok(invoiceService.getInvoicesByUser(userId));
     }
 }
