@@ -8,5 +8,4 @@ import lombok.Setter;
 public class PaymentRequest {
   private Long invoiceId;
   private Double amount;
-  private String method;
 }

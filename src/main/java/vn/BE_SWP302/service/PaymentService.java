@@ -28,7 +28,7 @@ public class PaymentService {
         Payment payment = new Payment();
         payment.setInvoice(invoice);
         payment.setAmount(invoice.getTotalAmount());
-        payment.setMethod(request.getMethod());
+        payment.setMethod("BANKING");
         payment.setPaymentDate(LocalDateTime.now());
 
         paymentRepository.save(payment);
