@@ -27,7 +27,8 @@ public class InvoiceService {
         Invoice invoice = new Invoice();
         invoice.setBooking(booking);
         invoice.setIssuedDate(LocalDateTime.now());
-        invoice.setTotalAmount(request.getTotalAmount());
+        // Lấy giá dịch vụ từ booking -> service
+        invoice.setTotalAmount(booking.getService().getPrice());
         invoice.setStatus(request.getStatus());
 
         invoiceRepository.save(invoice);
