@@ -8,5 +8,4 @@ import lombok.Setter;
 public class InvoiceRequest {
     private Long bookingId;
     private Double totalAmount;
-    private String status;
 }

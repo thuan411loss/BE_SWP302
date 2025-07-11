@@ -29,7 +29,7 @@ public class InvoiceService {
         invoice.setIssuedDate(LocalDateTime.now());
         // Lấy giá dịch vụ từ booking -> service
         invoice.setTotalAmount(booking.getService().getPrice());
-        invoice.setStatus(request.getStatus());
+        invoice.setStatus("PENDING");
 
         invoiceRepository.save(invoice);
         return new ApiResponse(true, "Invoice created successfully");

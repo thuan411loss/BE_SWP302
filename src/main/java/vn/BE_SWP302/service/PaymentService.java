@@ -33,6 +33,10 @@ public class PaymentService {
 
         paymentRepository.save(payment);
 
+        // Cập nhật trạng thái hóa đơn
+        invoice.setStatus("PAID");
+        invoiceRepository.save(invoice);
+
         return new ApiResponse(true, "Payment recorded successfully");
     }
 
