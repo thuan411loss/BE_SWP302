@@ -48,7 +48,7 @@ public class BookingController {
 
 	@GetMapping("/{id}")
 	@ApiMessage("Get booking by ID")
-	public ResponseEntity<BookingResponse> get(@PathVariable Long id) {
+	public ResponseEntity<BookingResponse> get(@PathVariable("id") Long id) {
 		Booking booking = bookingService.findById(id);
 		return ResponseEntity.ok(bookingService.toResponse(booking));
 	}
