@@ -39,7 +39,7 @@ public class MedicalResultsController {
 
     @GetMapping("/customer/{customerId}")
     @ApiMessage("Get medical results by customer ID")
-    public ResponseEntity<List<MedicalResultResponse>> getByCustomerId(@PathVariable Long customerId) {
+    public ResponseEntity<List<MedicalResultResponse>> getByCustomerId(@PathVariable("customerId") Long customerId) {
         return ResponseEntity.ok(medicalResultsService.getByCustomerId(customerId));
     }
 

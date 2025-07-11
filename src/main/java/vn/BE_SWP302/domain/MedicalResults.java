@@ -37,9 +37,6 @@ public class MedicalResults {
 	@JoinColumn(name = "doctor_id")
 	private User doctor; // Người nhập kết quả (bác sĩ đang đăng nhập)
 
-	private String testName; // Lấy từ examination.name
-	private LocalDateTime examDate; // Lấy từ examination.examDate
-
 	private LocalDate resultDate; // Người dùng chọn
 	private String resultValue; // Nhập từ form
 	private String conclusion; // Nhập từ form

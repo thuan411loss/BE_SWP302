@@ -40,10 +40,6 @@ public class MedicalResultsService {
 		String username = SecurityUtil.getCurrentUserLogin().orElse(null);
 		User doctor = userRepository.findByEmail(username);
 		result.setDoctor(doctor);
-		// Lấy testName, examDate từ Examination
-		result.setTestName(exam.getName());
-		result.setExamDate(exam.getExamDate());
-
 		result.setResultValue(request.getResultValue());
 		result.setResultDate(request.getResultDate());
 		result.setConclusion(request.getConclusion());
@@ -91,8 +87,9 @@ public class MedicalResultsService {
 	private MedicalResultResponse toResponse(MedicalResults r) {
 		MedicalResultResponse dto = new MedicalResultResponse();
 		dto.setResultId(r.getResultId());
-		dto.setTestName(r.getTestName());
-		dto.setExamDate(r.getExamDate());
+		// Lấy testName và examDate từ Examination
+		dto.setTestName(r.getExamination() != null ? r.getExamination().getName() : null);
+		dto.setExamDate(r.getExamination() != null ? r.getExamination().getExamDate() : null);
 		dto.setResultValue(r.getResultValue());
 		dto.setResultDate(r.getResultDate());
 		dto.setConclusion(r.getConclusion());
