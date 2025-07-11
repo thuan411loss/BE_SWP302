@@ -28,7 +28,7 @@ public class TreatmentServicesService {
 		service.setDuration(dto.getDuration());
 		service.setSuccessRate(dto.getSuccessRate());
 		service.setFeatures(dto.getFeatures());
-		service.setPriceRange(dto.getPriceRange());
+		service.setPrice(dto.getPrice());
 		service.setCurrency(dto.getCurrency());
 		service.setBadge(dto.getBadge());
 
@@ -59,7 +59,7 @@ public class TreatmentServicesService {
 		service.setDuration(dto.getDuration());
 		service.setSuccessRate(dto.getSuccessRate());
 		service.setFeatures(dto.getFeatures());
-		service.setPriceRange(dto.getPriceRange());
+		service.setPrice(dto.getPrice());
 		service.setCurrency(dto.getCurrency());
 		service.setBadge(dto.getBadge());
 
@@ -85,7 +85,7 @@ public class TreatmentServicesService {
 		response.setDuration(service.getDuration());
 		response.setSuccessRate(service.getSuccessRate());
 		response.setFeatures(service.getFeatures());
-		response.setPriceRange(service.getPriceRange());
+		response.setPrice(service.getPrice());
 		response.setCurrency(service.getCurrency());
 		response.setBadge(service.getBadge());
 

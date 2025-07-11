@@ -16,7 +16,7 @@ public class TreatmentServicesResponse {
     private String duration;
     private String successRate;
     private List<String> features;
-    private String priceRange;
+    private double price;
     private String currency;
     private String badge;
 }

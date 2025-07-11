@@ -1,6 +1,7 @@
 package vn.BE_SWP302.domain;
 
 import java.util.List;
+import java.math.BigDecimal;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -42,7 +43,7 @@ public class TreatmentServices {
 	@ElementCollection
 	private List<String> features;
 
-	private String priceRange;
+	private double price;
 	private String currency;
 	private String badge;
 
