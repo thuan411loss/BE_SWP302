@@ -84,6 +84,22 @@ public class MedicalResultsService {
 		return toResponse(r);
 	}
 
+	public ApiResponse updateMedicalResults(Long id, MedicalResultsRequest request) {
+		Optional<MedicalResults> resultOpt = medicalResultsRepository.findById(id);
+		if (resultOpt.isEmpty()) {
+			return new ApiResponse(false, "Medical result not found");
+		}
+		MedicalResults result = resultOpt.get();
+
+		// Không cho thay đổi bác sĩ
+		result.setResultValue(request.getResultValue());
+		result.setResultDate(request.getResultDate());
+		result.setConclusion(request.getConclusion());
+
+		medicalResultsRepository.save(result);
+		return new ApiResponse(true, "Medical result updated successfully");
+	}
+
 	private MedicalResultResponse toResponse(MedicalResults r) {
 		MedicalResultResponse dto = new MedicalResultResponse();
 		dto.setResultId(r.getResultId());
