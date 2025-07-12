@@ -50,4 +50,19 @@ public class InvoiceService {
             return res;
         }).collect(Collectors.toList());
     }
+
+    public InvoiceResponse getInvoiceByBookingId(Long bookingId) {
+        List<Invoice> invoices = invoiceRepository.findByBooking_BookingId(bookingId);
+        if (invoices.isEmpty()) {
+            throw new RuntimeException("Invoice not found for booking ID: " + bookingId);
+        }
+
+        Invoice invoice = invoices.get(0); // Lấy invoice đầu tiên
+        InvoiceResponse res = new InvoiceResponse();
+        res.setInvoiceId(invoice.getInvoiceId());
+        res.setIssuedDate(invoice.getIssuedDate());
+        res.setTotalAmount(invoice.getTotalAmount());
+        res.setStatus(invoice.getStatus());
+        return res;
+    }
 }

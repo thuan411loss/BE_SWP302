@@ -32,4 +32,9 @@ class InvoiceController {
     public ResponseEntity<List<InvoiceResponse>> getByUser(@PathVariable("userId") Long userId) {
         return ResponseEntity.ok(invoiceService.getInvoicesByUser(userId));
     }
+
+    @GetMapping("/booking/{bookingId}")
+    public ResponseEntity<InvoiceResponse> getByBookingId(@PathVariable("bookingId") Long bookingId) {
+        return ResponseEntity.ok(invoiceService.getInvoiceByBookingId(bookingId));
+    }
 }

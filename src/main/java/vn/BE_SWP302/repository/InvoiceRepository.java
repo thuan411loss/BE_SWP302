@@ -14,6 +14,8 @@ import vn.BE_SWP302.domain.Invoice;
 public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
     List<Invoice> findByBooking_Customer_Id(Long userId);
 
+    List<Invoice> findByBooking_BookingId(Long bookingId);
+
     @Query("SELECT COALESCE(SUM(i.totalAmount), 0) FROM Invoice i WHERE DATE(i.issuedDate) = :date")
     Double sumTotalAmountByDate(LocalDate date);
 
