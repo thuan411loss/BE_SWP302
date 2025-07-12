@@ -52,13 +52,30 @@ public class InvoiceService {
         }).collect(Collectors.toList());
     }
 
+    // public InvoiceResponse getInvoiceByBookingId(Long bookingId) {
+    // List<Invoice> invoices =
+    // invoiceRepository.findByBooking_BookingId(bookingId);
+    // if (invoices.isEmpty()) {
+    // throw new IdinvaliadException("Invoice not found for booking ID: " +
+    // bookingId);
+    // }
+
+    // Invoice invoice = invoices.get(0); // Lấy invoice đầu tiên
+    // InvoiceResponse res = new InvoiceResponse();
+    // res.setInvoiceId(invoice.getInvoiceId());
+    // res.setIssuedDate(invoice.getIssuedDate());
+    // res.setTotalAmount(invoice.getTotalAmount());
+    // res.setStatus(invoice.getStatus());
+    // return res;
+    // }
+
     public InvoiceResponse getInvoiceByBookingId(Long bookingId) {
         List<Invoice> invoices = invoiceRepository.findByBooking_BookingId(bookingId);
         if (invoices.isEmpty()) {
-            throw new IdinvaliadException("Invoice not found for booking ID: " + bookingId);
+            return null; // Trả về null thay vì throw exception
         }
 
-        Invoice invoice = invoices.get(0); // Lấy invoice đầu tiên
+        Invoice invoice = invoices.get(0);
         InvoiceResponse res = new InvoiceResponse();
         res.setInvoiceId(invoice.getInvoiceId());
         res.setIssuedDate(invoice.getIssuedDate());

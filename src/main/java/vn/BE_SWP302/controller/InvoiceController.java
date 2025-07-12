@@ -33,8 +33,18 @@ class InvoiceController {
         return ResponseEntity.ok(invoiceService.getInvoicesByUser(userId));
     }
 
+    // @GetMapping("/booking/{bookingId}")
+    // public ResponseEntity<InvoiceResponse>
+    // getByBookingId(@PathVariable("bookingId") Long bookingId) {
+    // return ResponseEntity.ok(invoiceService.getInvoiceByBookingId(bookingId));
+    // }
+
     @GetMapping("/booking/{bookingId}")
     public ResponseEntity<InvoiceResponse> getByBookingId(@PathVariable("bookingId") Long bookingId) {
-        return ResponseEntity.ok(invoiceService.getInvoiceByBookingId(bookingId));
+        InvoiceResponse response = invoiceService.getInvoiceByBookingId(bookingId);
+        if (response == null) {
+            return ResponseEntity.notFound().build(); // Trả về 404
+        }
+        return ResponseEntity.ok(response);
     }
 }
