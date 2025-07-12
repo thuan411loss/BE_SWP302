@@ -13,6 +13,7 @@ import vn.BE_SWP302.domain.response.ApiResponse;
 import vn.BE_SWP302.domain.response.InvoiceResponse;
 import vn.BE_SWP302.repository.BookingRepository;
 import vn.BE_SWP302.repository.InvoiceRepository;
+import vn.BE_SWP302.util.error.IdinvaliadException;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +23,7 @@ public class InvoiceService {
 
     public ApiResponse createInvoice(InvoiceRequest request) {
         Booking booking = bookingRepository.findById(request.getBookingId())
-                .orElseThrow(() -> new RuntimeException("Booking not found"));
+                .orElseThrow(() -> new IdinvaliadException("Booking not found"));
 
         Invoice invoice = new Invoice();
         invoice.setBooking(booking);
@@ -54,7 +55,7 @@ public class InvoiceService {
     public InvoiceResponse getInvoiceByBookingId(Long bookingId) {
         List<Invoice> invoices = invoiceRepository.findByBooking_BookingId(bookingId);
         if (invoices.isEmpty()) {
-            throw new RuntimeException("Invoice not found for booking ID: " + bookingId);
+            throw new IdinvaliadException("Invoice not found for booking ID: " + bookingId);
         }
 
         Invoice invoice = invoices.get(0); // Lấy invoice đầu tiên
