@@ -25,8 +25,8 @@ public class WorkSchedule {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "schedule_id")
-	private Long scheduleId;
+	@Column(name = "work_id")
+	private Long workId;
 
 	@ManyToOne
 	@JoinColumn(name = "doctor_id")

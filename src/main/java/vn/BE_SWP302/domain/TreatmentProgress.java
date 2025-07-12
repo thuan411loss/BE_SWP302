@@ -1,6 +1,6 @@
 package vn.BE_SWP302.domain;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -18,7 +18,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import vn.BE_SWP302.domain.Notification;
 
 @Entity
 @Table(name = "treatment_progress")
@@ -36,14 +35,11 @@ public class TreatmentProgress {
 	@JoinColumn(name = "schedule_id")
 	private TreatmentSchedules treatmentSchedule;
 
-	@Column(name = "date")
-	private LocalDate date;
+	@Column(name = "progress_date")
+	private LocalDateTime progressDate;
 
-	@Column(name = "activity", columnDefinition = "TEXT")
-	private String activity;
-
-	@Column(name = "doctor_note", columnDefinition = "TEXT")
-	private String doctorNote;
+	@Column(name = "description")
+	private String description;
 
 	@Column(name = "status", length = 50)
 	private String status;

@@ -1,8 +1,10 @@
 package vn.BE_SWP302.domain;
 
+import java.util.List;
 import java.math.BigDecimal;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,7 +16,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "TreatmentService")
+@Table(name = "treatment_service")
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
@@ -24,21 +26,25 @@ public class TreatmentServices {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "service_id")
-	private Long serviceId;
+	private Long service_id;
 
-	@Column(name = "service_name", nullable = false)
-	private String serviceName;
+	@Column(name = "name")
+	private String name;
 
-	@Column(name = "description", columnDefinition = "TEXT")
+	private String category;
+	private String title;
+
+	@Column(columnDefinition = "TEXT")
 	private String description;
 
-	@Column(name = "price")
-	private BigDecimal price;
+	private String duration;
+	private String successRate;
 
-	@Column(name = "duration_minutes")
-	private Integer durationMinutes;
+	@ElementCollection
+	private List<String> features;
 
-	@Column(name = "is_active")
-	private Boolean isActive = true;
+	private double price;
+	private String currency;
+	private String badge;
 
 }

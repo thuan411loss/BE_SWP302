@@ -20,20 +20,20 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Setter
+@Table(name = "treatment_schedules")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "treatment_schedules")
 public class TreatmentSchedules {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "schedule_id")
 	private Long scheduleId;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "result_id")
-	private MedicalResults medicalResult;
+	@Column(name = "stage_name", nullable = false)
+	private String stageName;
 
 	@Column(name = "start_date")
 	private LocalDate startDate;
@@ -41,13 +41,16 @@ public class TreatmentSchedules {
 	@Column(name = "end_date")
 	private LocalDate endDate;
 
-	@Column(name = "status", length = 50)
+	@Column(length = 50)
 	private String status;
 
-	@Column(name = "notes", columnDefinition = "TEXT")
+	@Column(columnDefinition = "TEXT")
 	private String notes;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "result_id")
+	private MedicalResults medicalResult;
 
 	@OneToMany(mappedBy = "treatmentSchedule", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<TreatmentProgress> treatmentProgresses;
-
 }
