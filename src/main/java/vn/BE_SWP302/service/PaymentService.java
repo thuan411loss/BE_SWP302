@@ -13,6 +13,9 @@ import vn.BE_SWP302.domain.response.ApiResponse;
 import vn.BE_SWP302.domain.response.PaymentResponse;
 import vn.BE_SWP302.repository.InvoiceRepository;
 import vn.BE_SWP302.repository.PaymentRepository;
+import vn.BE_SWP302.util.error.IdinvaliadException;
+import vn.BE_SWP302.service.QRCodeService;
+import vn.BE_SWP302.domain.response.PaymentQRResponse;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +23,7 @@ public class PaymentService {
 
     private final PaymentRepository paymentRepository;
     private final InvoiceRepository invoiceRepository;
+    private final QRCodeService qrCodeService;
 
     public ApiResponse createPayment(PaymentRequest request) {
         Invoice invoice = invoiceRepository.findById(request.getInvoiceId())
@@ -49,5 +53,33 @@ public class PaymentService {
             response.setPaymentDate(payment.getPaymentDate());
             return response;
         }).collect(Collectors.toList());
+    }
+
+    public PaymentQRResponse generatePaymentQR(Long invoiceId, String comment) {
+        Invoice invoice = invoiceRepository.findById(invoiceId)
+                .orElseThrow(() -> new IdinvaliadException("Invoice not found"));
+
+        PaymentQRResponse response = new PaymentQRResponse();
+        response.setInvoiceId(invoice.getInvoiceId());
+        response.setAmount(invoice.getTotalAmount());
+        response.setBankInfo("ABC Bank");
+        response.setAccountNumber("123456789");
+
+        // Tạo nội dung QR
+        String serviceName = invoice.getBooking().getService().getName();
+        String description = "Thanh toan dich vu " + serviceName;
+        String qrContent = qrCodeService.generatePaymentQRContent(invoice.getTotalAmount(), description, comment);
+        response.setQrContent(qrContent);
+
+        try {
+            // Tạo QR code base64
+            String qrCodeBase64 = qrCodeService.generateQRCodeBase64(qrContent);
+            response.setQrCodeBase64(qrCodeBase64);
+        } catch (Exception e) {
+            // Nếu có lỗi tạo QR, vẫn trả về thông tin khác
+            response.setQrCodeBase64(null);
+        }
+
+        return response;
     }
 }

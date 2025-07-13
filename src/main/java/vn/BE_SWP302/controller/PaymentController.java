@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import vn.BE_SWP302.domain.request.PaymentRequest;
 import vn.BE_SWP302.domain.response.ApiResponse;
 import vn.BE_SWP302.domain.response.PaymentResponse;
+import vn.BE_SWP302.domain.response.PaymentQRResponse;
 import vn.BE_SWP302.service.PaymentService;
 
 import java.util.List;
@@ -24,5 +25,12 @@ public class PaymentController {
     @GetMapping("/invoice/{invoiceId}")
     public ResponseEntity<List<PaymentResponse>> getByInvoice(@PathVariable Long invoiceId) {
         return ResponseEntity.ok(paymentService.getPaymentsByInvoice(invoiceId));
+    }
+
+    @GetMapping("/qr/{invoiceId}")
+    public ResponseEntity<PaymentQRResponse> getPaymentQR(
+            @PathVariable Long invoiceId,
+            @RequestParam(defaultValue = "") String comment) {
+        return ResponseEntity.ok(paymentService.generatePaymentQR(invoiceId, comment));
     }
 }
