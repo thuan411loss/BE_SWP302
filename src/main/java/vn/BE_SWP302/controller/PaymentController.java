@@ -29,7 +29,7 @@ public class PaymentController {
 
     @GetMapping("/qr/{invoiceId}")
     public ResponseEntity<PaymentQRResponse> getPaymentQR(
-            @PathVariable Long invoiceId,
+            @PathVariable("invoiceId") Long invoiceId,
             @RequestParam(defaultValue = "") String comment) {
         return ResponseEntity.ok(paymentService.generatePaymentQR(invoiceId, comment));
     }
