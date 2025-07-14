@@ -13,4 +13,5 @@ public class BookingResponse {
     private String serviceName;
     private LocalDateTime appointmentTime;
     private String status;
+    private String paymentStatus;
 }

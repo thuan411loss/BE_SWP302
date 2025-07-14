@@ -15,6 +15,7 @@ import vn.BE_SWP302.domain.WorkSchedule;
 import vn.BE_SWP302.domain.response.BookingResponse;
 import vn.BE_SWP302.domain.response.PatientDTO;
 import vn.BE_SWP302.repository.BookingRepository;
+import vn.BE_SWP302.repository.InvoiceRepository;
 import vn.BE_SWP302.util.constant.BookingStatus;
 
 @Service
@@ -28,6 +29,9 @@ public class BookingService {
 
 	@Autowired
 	private NotificationService notificationService;
+
+	@Autowired
+	private InvoiceRepository  invoiceRepository;
 
 	public Booking createBooking(User customer, User doctor, LocalDateTime appointmentTime, TreatmentServices service) {
 		// Kiểm tra role của customer
@@ -125,6 +129,14 @@ public class BookingService {
 		}
 		bookingRepository.deleteById(id);
 	}
+	public List<Booking> getPaidBookingsByCustomerId(Long customerId) {
+		List<Booking> allBookings = bookingRepository.findByCustomerId(customerId);
+		return allBookings.stream()
+				.filter(booking -> invoiceRepository
+						.findPaidInvoiceByBookingId(booking.getBookingId())
+						.isPresent())
+				.toList();
+	}
 
 	public BookingResponse toResponse(Booking booking) {
 		BookingResponse res = new BookingResponse();
@@ -137,6 +149,11 @@ public class BookingService {
 			res.setDoctorName(booking.getWork().getDoctor().getName());
 		if (booking.getService() != null)
 			res.setServiceName(booking.getService().getName());
+		invoiceRepository.findByBooking_BookingId(booking.getBookingId())
+				.stream()
+				.findFirst()
+				.ifPresent(invoice -> res.setPaymentStatus(invoice.getStatus()));
+
 		return res;
 	}
 
