@@ -50,6 +50,8 @@ public class UserController {
         String hashPassword = this.passwordEncoder.encode(postManUser.getPassword());
         postManUser.setPassword(hashPassword);
         User ericUser = this.userService.handleCreateUser(postManUser);
+        // Sau khi tạo user, tạo luôn account liên kết
+        this.userService.createUserAndAccount(ericUser, ericUser.getEmail(), ericUser.getPassword());
         return ResponseEntity.status(HttpStatus.CREATED).body(this.userService.convertToResCreateUserDTO(ericUser));
     }
 

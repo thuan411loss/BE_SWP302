@@ -16,6 +16,8 @@ import vn.BE_SWP302.domain.response.UserAdminResponse;
 import vn.BE_SWP302.domain.response.ResAdminUserDTO;
 import vn.BE_SWP302.repository.UserRepository;
 import vn.BE_SWP302.repository.RoleRepository;
+import vn.BE_SWP302.domain.Account;
+import vn.BE_SWP302.repository.AccountRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,10 +27,13 @@ import java.util.stream.Collectors;
 public class UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final AccountRepository accountRepository;
 
-    public UserService(UserRepository userRepository, RoleRepository roleRepository) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository,
+            AccountRepository accountRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.accountRepository = accountRepository;
     }
 
     public User handleCreateUser(User user) {
@@ -301,6 +306,21 @@ public class UserService {
             res.setRole(user.getRole() != null ? user.getRole().getRoleName() : "");
             return res;
         }).collect(Collectors.toList());
+    }
+
+    public User createUserAndAccount(User user, String username, String passwordHash) {
+        // 1. Lưu user trước
+        User savedUser = userRepository.save(user);
+
+        // 2. Tạo account và gán user
+        Account account = new Account();
+        account.setUser(savedUser);
+        account.setUsername(username);
+        account.setPasswordHash(passwordHash);
+        // ... set các trường khác nếu cần
+        accountRepository.save(account);
+
+        return savedUser;
     }
 
 }
