@@ -221,6 +221,8 @@ public class AuthController {
         // Luôn tạo user với role Customer
         userService.handleCreateUserWithDefaultRole(user);
 
+        userService.createUserAndAccount(user, user.getEmail(), user.getPassword());
+
         ResCreateUserDTO res = userService.convertToResCreateUserDTO(user);
         return ResponseEntity.ok(res);
     }
