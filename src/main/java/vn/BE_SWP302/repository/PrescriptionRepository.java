@@ -7,9 +7,6 @@ import vn.BE_SWP302.domain.Prescription;
 
 import java.util.List;
 
-public interface PrescriptionRepository
-        extends JpaRepository<Prescription, Long>, JpaSpecificationExecutor<Prescription> {
-    List<Prescription> findByTreatmentRecord_Id(Long treatmentRecordId);
-
-    List<Prescription> findByMedicalResult_ResultId(Long resultId);
+public interface PrescriptionRepository extends JpaRepository<Prescription, Long>, JpaSpecificationExecutor<Prescription> {
+    List<Prescription> findByTreatmentSchedule_TreatmentScheduleId(Long scheduleId);
 }

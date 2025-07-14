@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import vn.BE_SWP302.domain.TreatmentProgress;
-import vn.BE_SWP302.domain.TreatmentSchedules;
+import vn.BE_SWP302.domain.TreatmentSchedule;
 import vn.BE_SWP302.domain.request.TreatmentProgressRequest;
 import vn.BE_SWP302.domain.response.ApiResponse;
 import vn.BE_SWP302.domain.response.TreatmentProgressResponse;
@@ -21,7 +21,7 @@ public class TreatmentProgressService {
 	private final TreatmentSchedulesRepository treatmentScheduleRepository;
 
 	public ApiResponse create(TreatmentProgressRequest request) {
-		Optional<TreatmentSchedules> scheduleOpt = treatmentScheduleRepository.findById(request.getScheduleId());
+		Optional<TreatmentSchedule> scheduleOpt = treatmentScheduleRepository.findById(request.getScheduleId());
 		if (scheduleOpt.isEmpty()) {
 			return new ApiResponse(false, "Treatment Schedule not found");
 		}
@@ -46,7 +46,7 @@ public class TreatmentProgressService {
 	}
 
 	public List<TreatmentProgressResponse> getBySchedule(Long scheduleId) {
-		return treatmentProgressRepository.findByTreatmentSchedule_ScheduleId(scheduleId).stream()
+		return treatmentProgressRepository.findByTreatmentSchedule_TreatmentScheduleId(scheduleId).stream()
 				.map(this::mapToResponse).collect(Collectors.toList());
 	}
 
@@ -54,7 +54,7 @@ public class TreatmentProgressService {
 		TreatmentProgress progress = treatmentProgressRepository.findById(id)
 				.orElseThrow(() -> new RuntimeException("Progress not found"));
 
-		Optional<TreatmentSchedules> scheduleOpt = treatmentScheduleRepository.findById(request.getScheduleId());
+		Optional<TreatmentSchedule> scheduleOpt = treatmentScheduleRepository.findById(request.getScheduleId());
 		if (scheduleOpt.isEmpty()) {
 			return new ApiResponse(false, "Treatment Schedule not found");
 		}
@@ -87,7 +87,7 @@ public class TreatmentProgressService {
 	private TreatmentProgressResponse mapToResponse(TreatmentProgress progress) {
 		TreatmentProgressResponse res = new TreatmentProgressResponse();
 		res.setProgressId(progress.getProgressId());
-		res.setScheduleId(progress.getTreatmentSchedule().getScheduleId());
+		res.setScheduleId(progress.getTreatmentSchedule().getTreatmentScheduleId());
 		res.setProgressDate(progress.getProgressDate());
 		res.setDescription(progress.getDescription());
 		res.setStatus(progress.getStatus());

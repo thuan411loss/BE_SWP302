@@ -33,7 +33,7 @@ public class TreatmentProgress {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "schedule_id")
-	private TreatmentSchedules treatmentSchedule;
+	private TreatmentSchedule treatmentSchedule;
 
 	@Column(name = "progress_date")
 	private LocalDateTime progressDate;

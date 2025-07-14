@@ -1,6 +1,5 @@
 package vn.BE_SWP302.domain;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -23,35 +22,17 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class Prescription {
 	@Id
-
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "prescription_id")
 	private Long prescriptionId;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "result_id")
-	private MedicalResults medicalResult;
-
-	@ManyToOne
-	@JoinColumn(name = "treatment_record_id")
-	private TreatmentRecord treatmentRecord;
-
-	@Column(name = "medicine_name")
-	private String medicineName;
-
-	@Column(name = "dosage", length = 100)
+	private String instruction;
 	private String dosage;
-
-	@Column(name = "instruction", columnDefinition = "TEXT")
-	private String Instruction;
-
-	@Column(name = "prescribed_date")
+	private String duration;
+	private String frequency;
+	private String medicineName;
 	private LocalDate prescribedDate;
 
-	@Column(name = "frequency", length = 100)
-	private String frequency;
-
-	@Column(name = "duration", length = 100)
-	private String duration;
-
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "treatment_schedule_id")
+	private TreatmentSchedule treatmentSchedule;
 }

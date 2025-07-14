@@ -33,6 +33,4 @@ public class TreatmentRecord {
     @JoinColumn(name = "medical_result_id")
     private MedicalResults medicalResult;
 
-    @OneToMany(mappedBy = "treatmentRecord", cascade = CascadeType.ALL)
-    private List<Prescription> prescriptions;
 }

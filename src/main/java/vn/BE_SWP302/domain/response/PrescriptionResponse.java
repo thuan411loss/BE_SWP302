@@ -8,11 +8,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PrescriptionResponse {
-    private Long id;
+    private Long prescriptionId;
     private String medicineName;
     private String dosage;
-    private String instructions;
-    private LocalDate prescribedDate; // Ngày kê đơn
-    private String frequency; // Tần suất
-    private String duration; // Thời gian
+    private String frequency;
+    private String duration;
+    private String instruction;
+    private LocalDate prescribedDate;
+    private Long treatmentScheduleId;
 }

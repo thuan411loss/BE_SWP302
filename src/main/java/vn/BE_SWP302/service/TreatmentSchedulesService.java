@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import vn.BE_SWP302.domain.MedicalResults;
-import vn.BE_SWP302.domain.TreatmentSchedules;
+import vn.BE_SWP302.domain.TreatmentSchedule;
 import vn.BE_SWP302.domain.request.TreatmentScheduleRequest;
 import vn.BE_SWP302.domain.response.TreatmentScheduleResponse;
 import vn.BE_SWP302.repository.MedicalResultsRepository;
@@ -27,7 +27,7 @@ public class TreatmentSchedulesService {
 		MedicalResults result = medicalResultsRepository.findById(request.getResultId())
 				.orElseThrow(() -> new RuntimeException("Result not found"));
 
-		TreatmentSchedules schedule = new TreatmentSchedules();
+		TreatmentSchedule schedule = new TreatmentSchedule();
 		schedule.setStageName(request.getStageName());
 		schedule.setStartDate(request.getStartDate());
 		schedule.setEndDate(request.getEndDate());
@@ -47,7 +47,7 @@ public class TreatmentSchedulesService {
 	}
 
 	public TreatmentScheduleResponse updateSchedule(Long id, TreatmentScheduleRequest request) {
-		TreatmentSchedules schedule = treatmentSchedulesRepository.findById(id)
+		TreatmentSchedule schedule = treatmentSchedulesRepository.findById(id)
 				.orElseThrow(() -> new RuntimeException("Schedule not found"));
 
 		schedule.setStageName(request.getStageName());
@@ -74,9 +74,9 @@ public class TreatmentSchedulesService {
 	public void deleteSchedule(Long id) {
 		treatmentSchedulesRepository.deleteById(id);
 	}
-	private TreatmentScheduleResponse toResponse(TreatmentSchedules s) {
+	private TreatmentScheduleResponse toResponse(TreatmentSchedule s) {
 		TreatmentScheduleResponse res = new TreatmentScheduleResponse();
-		res.setScheduleId(s.getScheduleId());
+		res.setScheduleId(s.getTreatmentScheduleId());
 		res.setStageName(s.getStageName());
 		res.setStartDate(s.getStartDate());
 		res.setEndDate(s.getEndDate());

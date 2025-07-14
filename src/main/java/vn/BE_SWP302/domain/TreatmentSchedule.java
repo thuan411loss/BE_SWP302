@@ -25,12 +25,12 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TreatmentSchedules {
+public class TreatmentSchedule {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "schedule_id")
-	private Long scheduleId;
+	private Long treatmentScheduleId;
 
 	@Column(name = "stage_name", nullable = false)
 	private String stageName;

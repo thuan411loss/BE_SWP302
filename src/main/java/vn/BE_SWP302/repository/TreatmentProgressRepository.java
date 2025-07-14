@@ -13,7 +13,7 @@ import vn.BE_SWP302.domain.TreatmentProgress;
 @Repository
 public interface TreatmentProgressRepository extends JpaRepository<TreatmentProgress, Long>,
         JpaSpecificationExecutor<TreatmentProgress> {
-    List<TreatmentProgress> findByTreatmentSchedule_ScheduleId(Long scheduleId);
+    List<TreatmentProgress> findByTreatmentSchedule_TreatmentScheduleId(Long scheduleId);
 
     @Query("SELECT COUNT(tp) FROM TreatmentProgress tp WHERE tp.status = 'ONGOING'")
     long countOngoing();

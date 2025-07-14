@@ -18,52 +18,67 @@ public class PrescriptionController {
 
     private final PrescriptionService prescriptionService;
 
-    @PostMapping("/create")
-    @ApiMessage("Create a new prescription")
-    public ResponseEntity<ApiResponse> create(@RequestBody PrescriptionRequest request) {
-        return ResponseEntity.ok(prescriptionService.createPrescription(request));
-    }
+//    @PostMapping
+//    public ResponseEntity<PrescriptionResponse> create(@RequestBody PrescriptionRequest request) {
+//        return ResponseEntity.ok(prescriptionService.createPrescription(request));
+//    }
+//
+//    @GetMapping("/record/{recordId}")
+//    @ApiMessage("Get prescriptions by record ID")
+//    public ResponseEntity<List<PrescriptionResponse>> getByRecord(@PathVariable Long recordId) {
+//        return ResponseEntity.ok(prescriptionService.getPrescriptionsByRecord(recordId));
+//    }
+//
+//    @GetMapping("/{id}")
+//    @ApiMessage("Get prescription by ID")
+//    public ResponseEntity<PrescriptionResponse> getById(@PathVariable Long id) {
+//        return ResponseEntity.ok(prescriptionService.getPrescriptionById(id));
+//    }
+//
+//    @PutMapping("/{id}")
+//    @ApiMessage("Update prescription")
+//    public ResponseEntity<ApiResponse> update(@PathVariable Long id, @RequestBody PrescriptionRequest request) {
+//        return ResponseEntity.ok(prescriptionService.updatePrescription(id, request));
+//    }
+//
+//    @DeleteMapping("/{id}")
+//    @ApiMessage("Delete prescription")
+//    public ResponseEntity<ApiResponse> delete(@PathVariable Long id) {
+//        return ResponseEntity.ok(prescriptionService.deletePrescription(id));
+//    }
+//
+//    @GetMapping
+//    @ApiMessage("Get all prescriptions")
+//    public ResponseEntity<List<PrescriptionResponse>> getAll() {
+//        return ResponseEntity.ok(prescriptionService.getAllPrescriptions());
+//    }
+//
+//    @GetMapping("/customer/{customerId}")
+//    @ApiMessage("Get prescriptions by customer ID")
+//    public ResponseEntity<List<PrescriptionResponse>> getByCustomerId(@PathVariable Long customerId) {
+//        return ResponseEntity.ok(prescriptionService.getPrescriptionsByCustomerId(customerId));
+//    }
+//
+//    @GetMapping("/result/{resultId}")
+//    @ApiMessage("Get prescriptions by result ID")
+//    public ResponseEntity<List<PrescriptionResponse>> getByResultId(@PathVariable Long resultId) {
+//        return ResponseEntity.ok(prescriptionService.getPrescriptionsByResultId(resultId));
+//    }
+//
+//}
+@PostMapping
+public ResponseEntity<PrescriptionResponse> create(@RequestBody PrescriptionRequest request) {
+    return ResponseEntity.ok(prescriptionService.createPrescription(request));
+}
 
-    @GetMapping("/record/{recordId}")
-    @ApiMessage("Get prescriptions by record ID")
-    public ResponseEntity<List<PrescriptionResponse>> getByRecord(@PathVariable Long recordId) {
-        return ResponseEntity.ok(prescriptionService.getPrescriptionsByRecord(recordId));
-    }
-
-    @GetMapping("/{id}")
-    @ApiMessage("Get prescription by ID")
-    public ResponseEntity<PrescriptionResponse> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(prescriptionService.getPrescriptionById(id));
-    }
-
-    @PutMapping("/{id}")
-    @ApiMessage("Update prescription")
-    public ResponseEntity<ApiResponse> update(@PathVariable Long id, @RequestBody PrescriptionRequest request) {
-        return ResponseEntity.ok(prescriptionService.updatePrescription(id, request));
+    @GetMapping("/schedule/{scheduleId}")
+    public ResponseEntity<List<PrescriptionResponse>> getBySchedule(@PathVariable Long scheduleId) {
+        return ResponseEntity.ok(prescriptionService.getPrescriptionsBySchedule(scheduleId));
     }
 
     @DeleteMapping("/{id}")
-    @ApiMessage("Delete prescription")
-    public ResponseEntity<ApiResponse> delete(@PathVariable Long id) {
-        return ResponseEntity.ok(prescriptionService.deletePrescription(id));
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        prescriptionService.deletePrescription(id);
+        return ResponseEntity.noContent().build();
     }
-
-    @GetMapping
-    @ApiMessage("Get all prescriptions")
-    public ResponseEntity<List<PrescriptionResponse>> getAll() {
-        return ResponseEntity.ok(prescriptionService.getAllPrescriptions());
-    }
-
-    @GetMapping("/customer/{customerId}")
-    @ApiMessage("Get prescriptions by customer ID")
-    public ResponseEntity<List<PrescriptionResponse>> getByCustomerId(@PathVariable Long customerId) {
-        return ResponseEntity.ok(prescriptionService.getPrescriptionsByCustomerId(customerId));
-    }
-
-    @GetMapping("/result/{resultId}")
-    @ApiMessage("Get prescriptions by result ID")
-    public ResponseEntity<List<PrescriptionResponse>> getByResultId(@PathVariable Long resultId) {
-        return ResponseEntity.ok(prescriptionService.getPrescriptionsByResultId(resultId));
-    }
-
 }
