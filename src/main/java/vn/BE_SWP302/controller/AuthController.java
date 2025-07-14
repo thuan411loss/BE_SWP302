@@ -1,5 +1,8 @@
 package vn.BE_SWP302.controller;
 
+import java.io.IOException;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -17,10 +20,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import vn.BE_SWP302.domain.User;
 import vn.BE_SWP302.domain.request.LoginDTO;
 import vn.BE_SWP302.domain.request.RegisterDTO;
+import vn.BE_SWP302.domain.request.ResetPasswordDTO;
 import vn.BE_SWP302.domain.response.ResLoginDTO;
 import vn.BE_SWP302.domain.response.ResCreateUserDTO;
 import vn.BE_SWP302.repository.RoleRepository;
@@ -51,6 +56,11 @@ public class AuthController {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
+    }
+
+    @GetMapping("/auth/login/google")
+    public void redirectToGoogle(HttpServletResponse response) throws IOException {
+        response.sendRedirect("/oauth2/authorization/google");
     }
 
     @PostMapping("/auth/login")
@@ -225,6 +235,21 @@ public class AuthController {
 
         ResCreateUserDTO res = userService.convertToResCreateUserDTO(user);
         return ResponseEntity.ok(res);
+    }
+
+    @PostMapping("/auth/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestBody Map<String, String> body) {
+        String email = body.get("email");
+        // Kiểm tra user tồn tại, tạo mã OTP hoặc link reset, gửi email
+        // Lưu mã OTP/link vào DB hoặc cache
+        return ResponseEntity.ok("Đã gửi email xác nhận!");
+    }
+
+    @PostMapping("/auth/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordDTO dto) {
+        // Kiểm tra mã OTP hoặc link hợp lệ
+        // Đổi mật khẩu mới cho user
+        return ResponseEntity.ok("Đổi mật khẩu thành công!");
     }
 
     // lấy role có sẵn
