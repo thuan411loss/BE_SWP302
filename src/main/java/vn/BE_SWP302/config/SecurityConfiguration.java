@@ -42,7 +42,8 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
             CustomAuthenticationEntryPoint customAuthenticationEntryPoint,
-            CustomOAuth2UserService customOAuth2UserService)
+            CustomOAuth2UserService customOAuth2UserService,
+            OAuth2SuccessHandler oAuth2SuccessHandler)
             throws Exception {
         http
                 .csrf(c -> c.disable())
@@ -57,6 +58,7 @@ public class SecurityConfiguration {
                         .authenticationEntryPoint(customAuthenticationEntryPoint))
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/api/v1/auth/login/google")
+                        .successHandler(oAuth2SuccessHandler)
                         .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService)))
                 // .exceptionHandling(
                 // exceptions -> exceptions
