@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +25,16 @@ public class WorkScheduleController {
     @PostMapping("create")
     public ResponseEntity<ApiResponse> create(@RequestBody WorkScheduleRequest request) {
         return ResponseEntity.ok(workScheduleService.create(request));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse> update(@PathVariable("id") Long id, @RequestBody WorkScheduleRequest request) {
+        return ResponseEntity.ok(workScheduleService.update(id, request));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<WorkScheduleResponse>> getAll() {
+        return ResponseEntity.ok(workScheduleService.getAll());
     }
 
     @GetMapping("/doctor/{doctorId}")

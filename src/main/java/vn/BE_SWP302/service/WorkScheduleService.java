@@ -84,4 +84,37 @@ public class WorkScheduleService {
 		List<Booking> bookings = bookingRepository.findByWork_DoctorAndBookingDate(doctor, appointmentTime);
 		return !bookings.isEmpty();
 	}
+
+	public ApiResponse update(Long id, WorkScheduleRequest request) {
+		Optional<WorkSchedule> wsOpt = workScheduleRepository.findById(id);
+		if (wsOpt.isEmpty()) {
+			return new ApiResponse(false, "Work schedule not found");
+		}
+		WorkSchedule ws = wsOpt.get();
+		if (request.getUserId() != null) {
+			Optional<User> doctorOpt = userRepository.findById(request.getUserId());
+			if (doctorOpt.isPresent()) {
+				ws.setDoctor(doctorOpt.get());
+			}
+		}
+		if (request.getStartTime() != null) ws.setStartTime(request.getStartTime());
+		if (request.getEndTime() != null) ws.setEndTime(request.getEndTime());
+		if (request.getNotes() != null) ws.setNotes(request.getNotes());
+		workScheduleRepository.save(ws);
+		return new ApiResponse(true, "Work schedule updated");
+	}
+
+	public List<WorkScheduleResponse> getAll() {
+		return workScheduleRepository.findAll().stream().map(ws -> {
+			WorkScheduleResponse res = new WorkScheduleResponse();
+			res.setWorkId(ws.getWorkId());
+			res.setUserId(ws.getDoctor().getId());
+			res.setDoctorName(ws.getDoctor().getName());
+			res.setStartTime(ws.getStartTime());
+			res.setEndTime(ws.getEndTime());
+			res.setIsAvailable(ws.getIsAvailable());
+			res.setNotes(ws.getNotes());
+			return res;
+		}).collect(Collectors.toList());
+	}
 }
