@@ -28,8 +28,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
-                                        HttpServletResponse response,
-                                        Authentication authentication)
+            HttpServletResponse response,
+            Authentication authentication)
             throws IOException, ServletException {
 
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
@@ -69,8 +69,12 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                 .build();
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
+        // Lưu access token vào session
+        request.getSession().setAttribute("accessToken", accessToken);
+
         // Redirect về frontend
-        String redirectUrl = "http://localhost:5173/auth/google/callback?success=true&email=" + email;
+        String redirectUrl = "http://localhost:5173/auth/google/callback?success=true&email=" + email + "&token="
+                + accessToken;
         getRedirectStrategy().sendRedirect(request, response, redirectUrl);
     }
 }
