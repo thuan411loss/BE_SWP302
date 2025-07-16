@@ -21,7 +21,7 @@ public class User {
     private String name;
     @NotBlank(message = "email khong duoc de trong")
     private String email;
-    @NotBlank(message = "password khong duoc de trong")
+    // @NotBlank(message = "password khong duoc de trong") // Bỏ dòng này
     private String password;
 
     private int age;

@@ -30,7 +30,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         if (user == null) {
             user = new User();
             user.setEmail(email);
-            user.setName(name);
+            user.setName(name); // Sử dụng biến name đã lấy ở trên
             user.setPassword(""); // Google user không cần password
             userRepository.save(user);
         }
