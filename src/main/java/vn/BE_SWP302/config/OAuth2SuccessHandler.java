@@ -16,6 +16,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import vn.BE_SWP302.repository.RoleRepository;
+import vn.BE_SWP302.domain.Role;
 
 @Component
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
@@ -25,6 +27,9 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     @Autowired
     private SecurityUtil securityUtil;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
@@ -43,6 +48,9 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             user.setEmail(email);
             user.setName(name);
             user.setPassword(""); // Google user không cần password
+
+            Role defaultRole = roleRepository.findByRoleName("Customer");
+            user.setRole(defaultRole);
             userRepository.save(user);
             // Lấy lại user từ DB để đảm bảo có id, role...
             user = userRepository.findByEmail(email);
