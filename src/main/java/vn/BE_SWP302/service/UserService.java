@@ -3,10 +3,12 @@ package vn.BE_SWP302.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import vn.BE_SWP302.domain.User;
 import vn.BE_SWP302.domain.Role;
+import vn.BE_SWP302.domain.request.CreateUserAdminDTO;
 import vn.BE_SWP302.domain.request.Meta;
 import vn.BE_SWP302.domain.request.ResultPaginationDTO;
 import vn.BE_SWP302.domain.response.ResCreateUserDTO;
@@ -28,12 +30,14 @@ public class UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final AccountRepository accountRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public UserService(UserRepository userRepository, RoleRepository roleRepository,
-            AccountRepository accountRepository) {
+            AccountRepository accountRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.accountRepository = accountRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public User handleCreateUser(User user) {
@@ -194,22 +198,6 @@ public class UserService {
         return this.userRepository.findByRefreshTokenAndEmail(token, email);
     }
 
-    // Method để thay đổi role của user
-    public User changeUserRole(Long userId, Long roleId) {
-        User user = fetchUserById(userId);
-        if (user == null) {
-            throw new RuntimeException("User không tồn tại");
-        }
-
-        Role newRole = roleRepository.findById(roleId).orElse(null);
-        if (newRole == null) {
-            throw new RuntimeException("Role không tồn tại");
-        }
-
-        user.setRole(newRole);
-        return userRepository.save(user);
-    }
-
     // Method để lấy danh sách users theo role
     public List<User> getUsersByRole(String roleName) {
         return userRepository.findAll().stream()
@@ -321,6 +309,61 @@ public class UserService {
         accountRepository.save(account);
 
         return savedUser;
+    }
+
+    public ResCreateUserDTO handleCreateUserWithRoleAdmin(CreateUserAdminDTO dto) {
+        if (isEmailExist(dto.getEmail())) {
+            throw new RuntimeException("Email đã tồn tại");
+        }
+        Role role = roleRepository.findById(dto.getRoleId())
+                .orElseThrow(() -> new RuntimeException("Role không tồn tại"));
+        User user = new User();
+        user.setName(dto.getName());
+        user.setEmail(dto.getEmail());
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        user.setAge(dto.getAge());
+        user.setAddress(dto.getAddress());
+        user.setPhone(dto.getPhone());
+        user.setGender(dto.getGender());
+        user.setRole(role);
+        userRepository.save(user);
+        // Tạo account liên kết
+        Account account = new Account();
+        account.setUser(user);
+        account.setUsername(user.getEmail());
+        account.setPasswordHash(user.getPassword());
+        accountRepository.save(account);
+        return convertToResCreateUserDTO(user);
+    }
+
+    public ResAdminUserDTO updateUserByAdmin(Long userId, CreateUserAdminDTO dto) {
+        User user = fetchUserById(userId);
+        if (user == null) {
+            throw new RuntimeException("User với ID " + userId + " không tồn tại");
+        }
+        user.setName(dto.getName());
+        user.setEmail(dto.getEmail());
+        if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        }
+        user.setAge(dto.getAge());
+        user.setAddress(dto.getAddress());
+        user.setPhone(dto.getPhone());
+        user.setGender(dto.getGender());
+        // Cập nhật role theo tên nếu có
+        if (dto.getRoleName() != null && !dto.getRoleName().isEmpty()) {
+            Role role = roleRepository.findByRoleName(dto.getRoleName());
+            if (role == null) {
+                throw new RuntimeException("Role với tên '" + dto.getRoleName() + "' không tồn tại");
+            }
+            user.setRole(role);
+        } else if (dto.getRoleId() != null) {
+            Role role = roleRepository.findById(dto.getRoleId())
+                    .orElseThrow(() -> new RuntimeException("Role không tồn tại"));
+            user.setRole(role);
+        }
+        handleUpdateUser(user);
+        return convertToResAdminUserDTO(user);
     }
 
 }

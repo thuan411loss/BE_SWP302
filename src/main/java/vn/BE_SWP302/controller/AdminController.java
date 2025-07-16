@@ -9,8 +9,8 @@ import lombok.RequiredArgsConstructor;
 import vn.BE_SWP302.domain.Account;
 import vn.BE_SWP302.domain.Role;
 import vn.BE_SWP302.domain.User;
-import vn.BE_SWP302.domain.request.ChangeRoleDTO;
 import vn.BE_SWP302.domain.request.CreateFirstAdminDTO;
+import vn.BE_SWP302.domain.request.CreateUserAdminDTO;
 import vn.BE_SWP302.domain.response.ResCreateUserDTO;
 import vn.BE_SWP302.domain.response.UserAdminResponse;
 import vn.BE_SWP302.domain.response.ResAdminUserDTO;
@@ -101,51 +101,11 @@ public class AdminController {
         return ResponseEntity.ok(userDTOs);
     }
 
-    // Thay đổi role của user
-    @PutMapping("/users/change-role")
-    @ApiMessage("Change user role")
-    public ResponseEntity<?> changeUserRole(@Valid @RequestBody ChangeRoleDTO changeRoleDTO)
-            throws IdinvaliadException {
-        try {
-            // Validate input
-            if (changeRoleDTO.getUserId() == null) {
-                throw new IdinvaliadException("User ID không được để trống");
-            }
-            if (changeRoleDTO.getRoleId() == null) {
-                throw new IdinvaliadException("Role ID không được để trống");
-            }
-
-            // Kiểm tra user có tồn tại không
-            User existingUser = userService.fetchUserById(changeRoleDTO.getUserId());
-            if (existingUser == null) {
-                throw new IdinvaliadException("User với ID " + changeRoleDTO.getUserId() + " không tồn tại");
-            }
-
-            // Kiểm tra role có tồn tại không
-            Role existingRole = roleRepository.findById(changeRoleDTO.getRoleId()).orElse(null);
-            if (existingRole == null) {
-                throw new IdinvaliadException("Role với ID " + changeRoleDTO.getRoleId() + " không tồn tại");
-            }
-
-            // Bảo vệ admin duy nhất - không cho phép thay đổi role của admin
-            if (existingUser.getRole() != null && "Admin".equalsIgnoreCase(existingUser.getRole().getRoleName())) {
-                throw new IdinvaliadException("Không thể thay đổi role của admin duy nhất trong hệ thống");
-            }
-
-            // Không cho phép tạo thêm admin
-            if ("Admin".equalsIgnoreCase(existingRole.getRoleName())) {
-                List<User> admins = userService.getUsersByRole("Admin");
-                if (!admins.isEmpty()) {
-                    throw new IdinvaliadException("Hệ thống chỉ cho phép 1 admin duy nhất");
-                }
-            }
-
-            User updatedUser = userService.changeUserRole(changeRoleDTO.getUserId(), changeRoleDTO.getRoleId());
-            ResAdminUserDTO res = userService.convertToResAdminUserDTO(updatedUser);
-            return ResponseEntity.ok(res);
-        } catch (RuntimeException e) {
-            throw new IdinvaliadException(e.getMessage());
-        }
+    @PostMapping("/users")
+    @ApiMessage("Admin create user with role")
+    public ResponseEntity<ResCreateUserDTO> createUserByAdmin(@RequestBody CreateUserAdminDTO dto) {
+        ResCreateUserDTO res = userService.handleCreateUserWithRoleAdmin(dto);
+        return ResponseEntity.ok(res);
     }
 
     // Lấy thông tin user cụ thể
@@ -162,6 +122,14 @@ public class AdminController {
         }
 
         ResAdminUserDTO res = userService.convertToResAdminUserDTO(user);
+        return ResponseEntity.ok(res);
+    }
+
+    @PutMapping("/users/{userId}")
+    @ApiMessage("Admin update user info and role")
+    public ResponseEntity<ResAdminUserDTO> updateUserByAdmin(@PathVariable Long userId,
+            @RequestBody CreateUserAdminDTO dto) throws IdinvaliadException {
+        ResAdminUserDTO res = userService.updateUserByAdmin(userId, dto);
         return ResponseEntity.ok(res);
     }
 
