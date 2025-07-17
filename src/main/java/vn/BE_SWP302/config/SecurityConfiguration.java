@@ -23,6 +23,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import com.nimbusds.jose.util.Base64;
 
+import vn.BE_SWP302.service.CustomOAuth2UserService;
 import vn.BE_SWP302.util.SecurityUtil;
 
 @Configuration
@@ -40,17 +41,25 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
-            CustomAuthenticationEntryPoint customAuthenticationEntryPoint)
+            CustomAuthenticationEntryPoint customAuthenticationEntryPoint,
+            CustomOAuth2UserService customOAuth2UserService,
+            OAuth2SuccessHandler oAuth2SuccessHandler)
             throws Exception {
         http
                 .csrf(c -> c.disable())
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(
                         authz -> authz
-                                .requestMatchers("/", "/api/v1/auth/login", "/api/v1/auth/refresh").permitAll()
+                                .requestMatchers("/", "/api/v1/auth/login", "/api/v1/auth/refresh",
+                                        "/api/v1/auth/register", "/api/v1/auth/login/google")
+                                .permitAll()
                                 .anyRequest().authenticated())
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults())
                         .authenticationEntryPoint(customAuthenticationEntryPoint))
+                .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/api/v1/auth/login/google")
+                        .successHandler(oAuth2SuccessHandler)
+                        .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService)))
                 // .exceptionHandling(
                 // exceptions -> exceptions
                 // .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint()) // 401

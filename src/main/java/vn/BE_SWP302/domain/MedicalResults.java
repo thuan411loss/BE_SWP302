@@ -1,10 +1,9 @@
 package vn.BE_SWP302.domain;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -28,33 +27,21 @@ import lombok.Setter;
 public class MedicalResults {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "result_id")
-	private Long resultId;
+	private Long resultId; // Tự sinh
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "exam_id", nullable = false)
-	private Examination examination;
-
-	@Column(name = "test_name", length = 100)
-	private String testName;
-
-	@Column(name = "result_value")
-	private String resultValue;
-
-	@Column(name = "result_date")
-	private LocalDate resultDate;
+	private Examination examination; // Liên kết với Examination
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "staff_id")
-	private User staff;
+	@JoinColumn(name = "doctor_id")
+	private User doctor; // Người nhập kết quả (bác sĩ đang đăng nhập)
 
-	@OneToMany(mappedBy = "medicalResult", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<TreatmentSchedules> treatmentSchedules;
+	private LocalDate resultDate; // Người dùng chọn
+	private String resultValue; // Nhập từ form
+	private String conclusion; // Nhập từ form
 
-	@OneToMany(mappedBy = "medicalResult", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<Prescription> prescriptions;
-
-	@OneToMany(mappedBy = "medicalResult", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "medicalResult")
 	private List<TreatmentRecord> treatmentRecords;
 
 }

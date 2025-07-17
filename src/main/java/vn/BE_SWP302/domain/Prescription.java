@@ -1,6 +1,5 @@
 package vn.BE_SWP302.domain;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -13,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "prescription")
@@ -22,22 +22,17 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Prescription {
 	@Id
-
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "prescription_id")
 	private Long prescriptionId;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "result_id")
-	private MedicalResults medicalResult;
-
-	@Column(name = "medicine_name")
-	private String medicineName;
-
-	@Column(name = "dosage", length = 100)
+	private String instruction;
 	private String dosage;
+	private String duration;
+	private String frequency;
+	private String medicineName;
+	private LocalDate prescribedDate;
 
-	@Column(name = "usage_instruction", columnDefinition = "TEXT")
-	private String usageInstruction;
-
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "treatment_schedule_id")
+	private TreatmentSchedule treatmentSchedule;
 }

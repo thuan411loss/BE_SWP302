@@ -10,7 +10,7 @@ group = "vn.hoidanit"
 version = "0.0.1-SNAPSHOT"
 
 java {
-	sourceCompatibility = JavaVersion.VERSION_21
+	sourceCompatibility = JavaVersion.VERSION_17
 }
 
 repositories {
@@ -31,6 +31,11 @@ dependencies {
 	testImplementation("org.springframework.security:spring-security-test")
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 	implementation("com.turkraft.springfilter:jpa:3.1.7")
+	implementation ("org.springframework.boot:spring-boot-starter-oauth2-client")
+	
+	// ZXing for QR Code generation
+	implementation("com.google.zxing:core:3.5.2")
+	implementation("com.google.zxing:javase:3.5.2")
 
 }
 

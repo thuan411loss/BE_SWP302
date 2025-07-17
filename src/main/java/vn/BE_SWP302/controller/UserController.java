@@ -17,9 +17,9 @@ import com.turkraft.springfilter.boot.Filter;
 
 import jakarta.validation.Valid;
 import vn.BE_SWP302.domain.User;
-import vn.BE_SWP302.domain.dto.ResUpdateUserDTO;
-import vn.BE_SWP302.domain.dto.ResUserDTO;
-import vn.BE_SWP302.domain.dto.ResultPaginationDTO;
+import vn.BE_SWP302.domain.request.ResultPaginationDTO;
+import vn.BE_SWP302.domain.response.ResUpdateUserDTO;
+import vn.BE_SWP302.domain.response.ResUserDTO;
 import vn.BE_SWP302.service.UserService;
 import vn.BE_SWP302.util.annotation.ApiMessage;
 import vn.BE_SWP302.util.error.IdinvaliadException;
@@ -50,6 +50,8 @@ public class UserController {
         String hashPassword = this.passwordEncoder.encode(postManUser.getPassword());
         postManUser.setPassword(hashPassword);
         User ericUser = this.userService.handleCreateUser(postManUser);
+        // Sau khi tạo user, tạo luôn account liên kết
+        this.userService.createUserAndAccount(ericUser, ericUser.getEmail(), ericUser.getPassword());
         return ResponseEntity.status(HttpStatus.CREATED).body(this.userService.convertToResCreateUserDTO(ericUser));
     }
 
