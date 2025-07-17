@@ -14,6 +14,12 @@ import vn.BE_SWP302.domain.request.TreatmentScheduleRequest;
 import vn.BE_SWP302.domain.response.TreatmentScheduleResponse;
 import vn.BE_SWP302.repository.MedicalResultsRepository;
 import vn.BE_SWP302.repository.TreatmentSchedulesRepository;
+import vn.BE_SWP302.repository.ExaminationRepository;
+import vn.BE_SWP302.domain.User;
+import vn.BE_SWP302.repository.UserRepository;
+import vn.BE_SWP302.domain.Booking;
+import vn.BE_SWP302.repository.BookingRepository;
+import vn.BE_SWP302.domain.Examination;
 
 @Service
 @RequiredArgsConstructor
@@ -22,14 +28,32 @@ public class TreatmentSchedulesService {
 
 	private final TreatmentSchedulesRepository treatmentSchedulesRepository;
 	private final MedicalResultsRepository medicalResultsRepository;
+	private final ExaminationRepository examinationRepository;
+	private final UserRepository userRepository;
+	private final BookingRepository bookingRepository;
 
 	public TreatmentScheduleResponse createSchedule(TreatmentScheduleRequest request) {
-		// Lấy danh sách MedicalResults theo customerId, sắp xếp lấy cái mới nhất
-		List<MedicalResults> results = medicalResultsRepository.findByCustomerId(request.getCustomerId());
-		if (results == null || results.isEmpty()) {
-			throw new RuntimeException("No medical result found for this customer");
-		}
-		MedicalResults result = results.get(results.size() - 1); // lấy cái mới nhất (cuối danh sách)
+		// Lấy user theo customerId
+		User customer = userRepository.findById(request.getCustomerId())
+				.orElseThrow(() -> new RuntimeException("Customer not found"));
+
+		// Lấy booking mới nhất của customer
+		List<Booking> bookings = bookingRepository.findByCustomerOrderByBookingDateDesc(customer);
+		if (bookings.isEmpty())
+			throw new RuntimeException("No booking found for this customer");
+		Booking latestBooking = bookings.get(0);
+
+		// Lấy examination theo booking
+		List<Examination> exams = examinationRepository.findByBooking_BookingId(latestBooking.getBookingId());
+		if (exams.isEmpty())
+			throw new RuntimeException("No examination found for this booking");
+		Examination latestExam = exams.get(exams.size() - 1);
+
+		// Lấy medical result theo exam
+		List<MedicalResults> results = medicalResultsRepository.findByExamination_ExamId(latestExam.getExamId());
+		if (results.isEmpty())
+			throw new RuntimeException("No medical result found for this examination");
+		MedicalResults latestResult = results.get(results.size() - 1);
 
 		TreatmentSchedule schedule = new TreatmentSchedule();
 		schedule.setStageName(request.getStageName());
@@ -37,7 +61,7 @@ public class TreatmentSchedulesService {
 		schedule.setEndDate(request.getEndDate());
 		schedule.setStatus(request.getStatus());
 		schedule.setNotes(String.join("\n", request.getActivities()));
-		schedule.setMedicalResult(result);
+		schedule.setMedicalResult(latestResult);
 
 		schedule = treatmentSchedulesRepository.save(schedule);
 		return toResponse(schedule);
