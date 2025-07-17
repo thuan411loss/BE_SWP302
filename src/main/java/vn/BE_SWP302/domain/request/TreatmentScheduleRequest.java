@@ -9,9 +9,8 @@ import java.util.List;
 @Setter
 @Getter
 public class TreatmentScheduleRequest {
-    // private Long resultId; // Không cần truyền từ client nữa, sẽ lấy tự động theo
-    // customerId
-    private Long customerId;
+
+    private Long bookingId;
     private String stageName;
     private LocalDate startDate;
     private LocalDate endDate;

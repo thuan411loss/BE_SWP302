@@ -8,6 +8,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import vn.BE_SWP302.domain.Examination;
 import vn.BE_SWP302.domain.MedicalResults;
 import vn.BE_SWP302.domain.TreatmentSchedule;
 import vn.BE_SWP302.domain.request.TreatmentScheduleRequest;
@@ -15,11 +16,6 @@ import vn.BE_SWP302.domain.response.TreatmentScheduleResponse;
 import vn.BE_SWP302.repository.MedicalResultsRepository;
 import vn.BE_SWP302.repository.TreatmentSchedulesRepository;
 import vn.BE_SWP302.repository.ExaminationRepository;
-import vn.BE_SWP302.domain.User;
-import vn.BE_SWP302.repository.UserRepository;
-import vn.BE_SWP302.domain.Booking;
-import vn.BE_SWP302.repository.BookingRepository;
-import vn.BE_SWP302.domain.Examination;
 
 @Service
 @RequiredArgsConstructor
@@ -29,31 +25,22 @@ public class TreatmentSchedulesService {
 	private final TreatmentSchedulesRepository treatmentSchedulesRepository;
 	private final MedicalResultsRepository medicalResultsRepository;
 	private final ExaminationRepository examinationRepository;
-	private final UserRepository userRepository;
-	private final BookingRepository bookingRepository;
 
 	public TreatmentScheduleResponse createSchedule(TreatmentScheduleRequest request) {
-		// Lấy user theo customerId
-		User customer = userRepository.findById(request.getCustomerId())
-				.orElseThrow(() -> new RuntimeException("Customer not found"));
-
-		// Lấy booking mới nhất của customer
-		List<Booking> bookings = bookingRepository.findByCustomerOrderByBookingDateDesc(customer);
-		if (bookings.isEmpty())
-			throw new RuntimeException("No booking found for this customer");
-		Booking latestBooking = bookings.get(0);
-
-		// Lấy examination theo booking
-		List<Examination> exams = examinationRepository.findByBooking_BookingId(latestBooking.getBookingId());
-		if (exams.isEmpty())
+		// Lấy danh sách Examination theo bookingId
+		List<Examination> exams = examinationRepository
+				.findByBooking_BookingId(request.getBookingId());
+		if (exams == null || exams.isEmpty()) {
 			throw new RuntimeException("No examination found for this booking");
-		Examination latestExam = exams.get(exams.size() - 1);
+		}
+		Examination exam = exams.get(exams.size() - 1); // lấy cái mới nhất
 
-		// Lấy medical result theo exam
-		List<MedicalResults> results = medicalResultsRepository.findByExamination_ExamId(latestExam.getExamId());
-		if (results.isEmpty())
-			throw new RuntimeException("No medical result found for this examination");
-		MedicalResults latestResult = results.get(results.size() - 1);
+		// Lấy danh sách MedicalResults theo examId
+		List<MedicalResults> results = medicalResultsRepository.findByExamination_ExamId(exam.getExamId());
+		if (results == null || results.isEmpty()) {
+			throw new RuntimeException("No medical result found for this booking");
+		}
+		MedicalResults result = results.get(results.size() - 1); // lấy cái mới nhất
 
 		TreatmentSchedule schedule = new TreatmentSchedule();
 		schedule.setStageName(request.getStageName());
@@ -61,7 +48,7 @@ public class TreatmentSchedulesService {
 		schedule.setEndDate(request.getEndDate());
 		schedule.setStatus(request.getStatus());
 		schedule.setNotes(String.join("\n", request.getActivities()));
-		schedule.setMedicalResult(latestResult);
+		schedule.setMedicalResult(result);
 
 		schedule = treatmentSchedulesRepository.save(schedule);
 		return toResponse(schedule);
