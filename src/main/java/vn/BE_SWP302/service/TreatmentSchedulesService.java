@@ -24,8 +24,12 @@ public class TreatmentSchedulesService {
 	private final MedicalResultsRepository medicalResultsRepository;
 
 	public TreatmentScheduleResponse createSchedule(TreatmentScheduleRequest request) {
-		MedicalResults result = medicalResultsRepository.findById(request.getResultId())
-				.orElseThrow(() -> new RuntimeException("Result not found"));
+		// Lấy danh sách MedicalResults theo customerId, sắp xếp lấy cái mới nhất
+		List<MedicalResults> results = medicalResultsRepository.findByCustomerId(request.getCustomerId());
+		if (results == null || results.isEmpty()) {
+			throw new RuntimeException("No medical result found for this customer");
+		}
+		MedicalResults result = results.get(results.size() - 1); // lấy cái mới nhất (cuối danh sách)
 
 		TreatmentSchedule schedule = new TreatmentSchedule();
 		schedule.setStageName(request.getStageName());
@@ -58,12 +62,14 @@ public class TreatmentSchedulesService {
 
 		return toResponse(treatmentSchedulesRepository.save(schedule));
 	}
+
 	public List<TreatmentScheduleResponse> getSchedulesByCustomerIdFromBooking(Long customerId) {
 		return treatmentSchedulesRepository.findByMedicalResult_Examination_Booking_CustomerId(customerId)
 				.stream()
 				.map(this::toResponse)
 				.collect(Collectors.toList());
 	}
+
 	public List<TreatmentScheduleResponse> getAllSchedules() {
 		return treatmentSchedulesRepository.findAll()
 				.stream()
@@ -74,6 +80,7 @@ public class TreatmentSchedulesService {
 	public void deleteSchedule(Long id) {
 		treatmentSchedulesRepository.deleteById(id);
 	}
+
 	private TreatmentScheduleResponse toResponse(TreatmentSchedule s) {
 		TreatmentScheduleResponse res = new TreatmentScheduleResponse();
 		res.setScheduleId(s.getTreatmentScheduleId());
