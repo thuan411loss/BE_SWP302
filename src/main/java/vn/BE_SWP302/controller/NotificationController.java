@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import vn.BE_SWP302.domain.Notification;
-import vn.BE_SWP302.domain.dto.ApiResponse;
-import vn.BE_SWP302.domain.dto.NotificationRequest;
+import vn.BE_SWP302.domain.request.NotificationRequest;
+import vn.BE_SWP302.domain.response.ApiResponse;
+import vn.BE_SWP302.domain.response.NotificationResponse;
 import vn.BE_SWP302.service.NotificationService;
 
 @RestController
@@ -28,8 +28,13 @@ class NotificationController {
         return ResponseEntity.ok(notificationService.createNotification(request));
     }
 
+    @PostMapping
+    public ResponseEntity<ApiResponse> create(@RequestBody NotificationRequest request) {
+        return ResponseEntity.ok(notificationService.createNotification(request));
+    }
+
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Notification>> getUserNotifications(@PathVariable Long userId) {
+    public ResponseEntity<List<NotificationResponse>> getUserNotifications(@PathVariable Long userId) {
         return ResponseEntity.ok(notificationService.getUserNotifications(userId));
     }
 }

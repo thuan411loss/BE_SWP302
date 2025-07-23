@@ -1,32 +1,105 @@
 package vn.BE_SWP302.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import vn.BE_SWP302.domain.TreatmentServices;
+
+import vn.BE_SWP302.domain.request.TreatmentServicesRequest;
+import vn.BE_SWP302.domain.response.TreatmentServicesResponse;
+
 import vn.BE_SWP302.repository.TreatmentServicesRepository;
 
 @Service
+@RequiredArgsConstructor
 public class TreatmentServicesService {
 
-	@Autowired
-	TreatmentServicesRepository repository;
+	private final TreatmentServicesRepository repository;
 
-	public List<TreatmentServices> findAll() {
-		return repository.findAll();
+	public TreatmentServicesResponse create(TreatmentServicesRequest dto) {
+		TreatmentServices service = new TreatmentServices();
+		service.setName(dto.getName());
+		service.setCategory(dto.getCategory());
+		service.setTitle(dto.getTitle());
+		service.setDescription(dto.getDescription());
+		service.setDuration(dto.getDuration());
+		service.setSuccessRate(dto.getSuccessRate());
+		service.setFeatures(dto.getFeatures());
+		service.setPrice(dto.getPrice());
+		service.setCurrency(dto.getCurrency());
+		service.setBadge(dto.getBadge());
+
+		TreatmentServices saved = repository.save(service);
+		return mapToResponse(saved);
 	}
 
-	public TreatmentServices findById(Long id) {
-		return repository.findById(id).orElse(null);
+	public List<TreatmentServicesResponse> getAll() {
+		return repository.findAll()
+				.stream()
+				.map(this::mapToResponse)
+				.collect(Collectors.toList());
 	}
 
-	public TreatmentServices save(TreatmentServices service) {
-		return repository.save(service);
+	public TreatmentServicesResponse getById(Long id) {
+		TreatmentServices service = repository.findById(id)
+				.orElseThrow(() -> new RuntimeException("Service not found"));
+		return mapToResponse(service);
+	}
+
+	public TreatmentServicesResponse update(Long id, TreatmentServicesRequest dto) {
+		TreatmentServices service = repository.findById(id)
+				.orElseThrow(() -> new RuntimeException("Service not found"));
+		service.setName(dto.getName());
+		service.setCategory(dto.getCategory());
+		service.setTitle(dto.getTitle());
+		service.setDescription(dto.getDescription());
+		service.setDuration(dto.getDuration());
+		service.setSuccessRate(dto.getSuccessRate());
+		service.setFeatures(dto.getFeatures());
+		service.setPrice(dto.getPrice());
+		service.setCurrency(dto.getCurrency());
+		service.setBadge(dto.getBadge());
+
+		TreatmentServices updated = repository.save(service);
+		return mapToResponse(updated);
 	}
 
 	public void delete(Long id) {
 		repository.deleteById(id);
+	}
+
+	public TreatmentServices findByName(String name) {
+		return repository.findByName(name);
+	}
+
+	private TreatmentServicesResponse mapToResponse(TreatmentServices service) {
+		TreatmentServicesResponse response = new TreatmentServicesResponse();
+		response.setId(service.getService_id());
+		response.setName(service.getName());
+		response.setCategory(service.getCategory());
+		response.setTitle(service.getTitle());
+		response.setDescription(service.getDescription());
+		response.setDuration(service.getDuration());
+		response.setSuccessRate(service.getSuccessRate());
+		response.setFeatures(service.getFeatures());
+		response.setPrice(service.getPrice());
+		response.setCurrency(service.getCurrency());
+		response.setBadge(service.getBadge());
+
+		return response;
+	}
+
+	public TreatmentServices findById(Long id) {
+		return repository.findById(id)
+				.orElseThrow(() -> new RuntimeException("Service not found"));
+	}
+
+	public List<String> getServiceNames() {
+		return repository.findAll().stream()
+				.map(TreatmentServices::getName)
+				.collect(Collectors.toList());
 	}
 }

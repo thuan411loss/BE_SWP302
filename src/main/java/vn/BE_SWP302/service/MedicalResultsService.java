@@ -1,8 +1,8 @@
 package vn.BE_SWP302.service;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -10,11 +10,13 @@ import lombok.RequiredArgsConstructor;
 import vn.BE_SWP302.domain.Examination;
 import vn.BE_SWP302.domain.MedicalResults;
 import vn.BE_SWP302.domain.User;
-import vn.BE_SWP302.domain.dto.ApiResponse;
-import vn.BE_SWP302.domain.dto.MedicalResultsRequest;
+import vn.BE_SWP302.domain.request.MedicalResultsRequest;
+import vn.BE_SWP302.domain.response.ApiResponse;
+import vn.BE_SWP302.domain.response.MedicalResultResponse;
 import vn.BE_SWP302.repository.ExaminationRepository;
 import vn.BE_SWP302.repository.MedicalResultsRepository;
 import vn.BE_SWP302.repository.UserRepository;
+import vn.BE_SWP302.util.SecurityUtil;
 
 @Service
 @RequiredArgsConstructor
@@ -26,26 +28,31 @@ public class MedicalResultsService {
 	private final UserRepository userRepository;
 
 	public ApiResponse createMedicalResults(MedicalResultsRequest request) {
-		Optional<Examination> examination = examinationRepository.findById(request.getExamId());
-		if (examination.isEmpty()) {
+		Optional<Examination> examOpt = examinationRepository.findById(request.getExamId());
+		if (examOpt.isEmpty()) {
 			return new ApiResponse(false, "Examination not found");
 		}
-		Optional<User> staff = userRepository.findById(request.getStaffId());
-		if (staff.isEmpty()) {
-			return new ApiResponse(false, "Staff not found");
-		}
-		MedicalResults results = new MedicalResults();
-		results.setExamination(examination.get());
-		results.setTestName(request.getTestName());
-		results.setResultValue(request.getResultValue());
-		results.setResultDate(LocalDate.parse(request.getResultDate()));
-		results.setStaff(staff.get());
-		medicalResultsRepository.save(results);
-		return new ApiResponse(true, "Medical results created successfully");
+		Examination exam = examOpt.get();
+
+		MedicalResults result = new MedicalResults();
+		result.setExamination(exam);
+
+		String username = SecurityUtil.getCurrentUserLogin().orElse(null);
+		User doctor = userRepository.findByEmail(username);
+		result.setDoctor(doctor);
+		result.setResultValue(request.getResultValue());
+		result.setResultDate(request.getResultDate());
+		result.setConclusion(request.getConclusion());
+
+		medicalResultsRepository.save(result);
+		return new ApiResponse(true, "Medical result created successfully");
 	}
 
-	public List<MedicalResults> findAll() {
-		return medicalResultsRepository.findAll();
+	public List<MedicalResultResponse> getByExam(Long examId) {
+		return medicalResultsRepository.findByExamination_ExamId(examId)
+				.stream()
+				.map(this::toResponse)
+				.collect(Collectors.toList());
 	}
 
 	public MedicalResults findById(Long id) {
@@ -62,5 +69,47 @@ public class MedicalResultsService {
 
 	public List<MedicalResults> getResultsByExamId(Long examId) {
 		return medicalResultsRepository.findByExamination_ExamId(examId);
+	}
+
+	public List<MedicalResultResponse> getByCustomerId(Long customerId) {
+		return medicalResultsRepository.findByCustomerId(customerId)
+				.stream()
+				.map(this::toResponse)
+				.collect(Collectors.toList());
+	}
+
+	public MedicalResultResponse getById(Long resultId) {
+		MedicalResults r = medicalResultsRepository.findById(resultId)
+				.orElseThrow(() -> new RuntimeException("Medical result not found"));
+		return toResponse(r);
+	}
+
+	public ApiResponse updateMedicalResults(Long id, MedicalResultsRequest request) {
+		Optional<MedicalResults> resultOpt = medicalResultsRepository.findById(id);
+		if (resultOpt.isEmpty()) {
+			return new ApiResponse(false, "Medical result not found");
+		}
+		MedicalResults result = resultOpt.get();
+
+		// Không cho thay đổi bác sĩ
+		result.setResultValue(request.getResultValue());
+		result.setResultDate(request.getResultDate());
+		result.setConclusion(request.getConclusion());
+
+		medicalResultsRepository.save(result);
+		return new ApiResponse(true, "Medical result updated successfully");
+	}
+
+	private MedicalResultResponse toResponse(MedicalResults r) {
+		MedicalResultResponse dto = new MedicalResultResponse();
+		dto.setResultId(r.getResultId());
+		// Lấy testName và examDate từ Examination
+		dto.setTestName(r.getExamination() != null ? r.getExamination().getName() : null);
+		dto.setExamDate(r.getExamination() != null ? r.getExamination().getExamDate() : null);
+		dto.setResultValue(r.getResultValue());
+		dto.setResultDate(r.getResultDate());
+		dto.setConclusion(r.getConclusion());
+		dto.setDoctorName(r.getDoctor() != null ? r.getDoctor().getName() : null);
+		return dto;
 	}
 }

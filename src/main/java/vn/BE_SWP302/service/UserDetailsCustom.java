@@ -25,10 +25,13 @@ public class UserDetailsCustom implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("Username/password khong hop le ");
         }
+
+        // Sử dụng role thực tế từ database
+        String roleName = user.getRole() != null ? user.getRole().getRoleName() : "USER";
         return new User(
                 user.getEmail(),
                 user.getPassword(),
-                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + roleName.toUpperCase())));
     }
 
 }
